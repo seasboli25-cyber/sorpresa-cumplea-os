@@ -575,55 +575,56 @@
 
   $$('.revela').forEach(observar);
 
-  /* ───────────── El reloj ───────────── */
-  (function reloj() {
-    const fecha = (s) => {
-      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || ''));
-      if (!m) return null;
-      const d = new Date(+m[1], +m[2] - 1, +m[3]);
-      return isNaN(d) ? null : d;
-    };
-    const nac = fecha(C.fechaNacimiento);
-    const jun = fecha(C.fechaJuntos);
-    const hoy = new Date();
-    const esHoy = !nac || (hoy.getMonth() === nac.getMonth() && hoy.getDate() === nac.getDate());
-    const cont = $('#reloj');
-    const nota = $('#reloj-nota');
-    let unidades, calcular;
+  /* ───────────── Fechas ───────────── */
+  const DIA = 86400000;
+  const fecha = (s) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || ''));
+    if (!m) return null;
+    const d = new Date(+m[1], +m[2] - 1, +m[3]);
+    return isNaN(d) ? null : d;
+  };
+  const medianoche = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const nac = fecha(C.fechaNacimiento);
+  const jun = fecha(C.fechaJuntos);
+  const diaCumple = (() => {
+    const m = /^(\d{2})-(\d{2})$/.exec(String(C.cumpleanos || ''));
+    if (m) return [+m[1] - 1, +m[2]];
+    return nac ? [nac.getMonth(), nac.getDate()] : null;
+  })();
+  // Qué cumpleaños celebra la página: el de hoy, el que viene o el que acaba de pasar.
+  function cumpleActual(ahora = new Date()) {
+    if (!diaCumple) return { modo: 'hoy', fecha: medianoche(ahora) };
+    const hoy = medianoche(ahora);
+    const este = new Date(hoy.getFullYear(), diaCumple[0], diaCumple[1]);
+    const dif = Math.round((hoy - este) / DIA);
+    if (dif === 0) return { modo: 'hoy', fecha: este };
+    if (dif < 0) return { modo: 'antes', fecha: este };
+    if (dif <= 21) return { modo: 'despues', fecha: este, dias: dif };
+    return { modo: 'antes', fecha: new Date(hoy.getFullYear() + 1, diaCumple[0], diaCumple[1]) };
+  }
+  const plural = (n, uno, varios) => `${n.toLocaleString('es')} ${n === 1 ? uno : varios}`;
 
-    if (esHoy) {
-      const fin = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1);
-      $('#reloj-intro').textContent = 'Hoy es tu cumpleaños, y esto es lo que queda de tu día oficial:';
-      nota.textContent = 'Cuando llegue a cero te voy a seguir celebrando igual.';
-      unidades = ['horas', 'minutos', 'segundos'];
-      calcular = () => {
-        const s = Math.max(0, Math.floor((fin - Date.now()) / 1000));
-        return [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60];
-      };
-      if (nac) {
-        const edad = document.createElement('p');
-        edad.className = 'edad';
-        edad.textContent = `¡${hoy.getFullYear() - nac.getFullYear()} años!`;
-        cont.before(edad);
-      }
-    } else {
-      $('#reloj-intro').textContent = 'Llevas haciendo más bonito este mundo';
-      nota.textContent = 'Y yo agradezco cada uno de esos segundos.';
-      unidades = ['días', 'horas', 'minutos', 'segundos'];
-      calcular = () => {
-        const s = Math.max(0, Math.floor((Date.now() - nac) / 1000));
-        return [Math.floor(s / 86400), Math.floor((s % 86400) / 3600), Math.floor((s % 3600) / 60), s % 60];
-      };
-    }
+  (function fechasVisibles() {
+    if (!diaCumple) return;
+    const c = cumpleActual().fecha;
+    const mes = c.toLocaleDateString('es', { month: 'short' }).replace('.', '').toUpperCase();
+    $('#matasellos-dia').textContent = `${c.getDate()} ${mes}`;
+    $('#matasellos-anio').textContent = String(c.getFullYear());
+    $('#matasellos').hidden = false;
+    const pf = $('#portada-fecha');
+    pf.textContent = c.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' });
+    pf.hidden = false;
+  })();
 
+  // Contador reutilizable: pinta unidades y anima la cifra que cambia.
+  function contador(cont, unidades, calcular, alTerminar) {
     cont.style.setProperty('--n', unidades.length);
     cont.innerHTML = unidades.map((u) => `<div class="unidad"><b>00</b><span>${u}</span></div>`).join('');
     const cifras = $$('.unidad b', cont);
     let antes = [];
-    let terminado = false;
     function tic() {
       const v = calcular();
-      const textos = v.map((x, i) => (!esHoy && i === 0 ? x.toLocaleString('es') : String(x).padStart(2, '0')));
+      const textos = v.map((x, i) => (i === 0 && unidades.length === 4 ? x.toLocaleString('es') : String(x).padStart(2, '0')));
       textos.forEach((t, i) => {
         if (t === antes[i]) return;
         cifras[i].textContent = t;
@@ -635,20 +636,141 @@
         }
       });
       antes = textos;
-      if (esHoy && !terminado && v.every((x) => x === 0)) {
-        terminado = true;
-        nota.textContent = 'Terminó tu día oficial. Yo sigo celebrándote igual.';
+      if (alTerminar && v.every((x) => x === 0)) { clearInterval(id); alTerminar(); }
+    }
+    const id = setInterval(tic, 1000);
+    tic();
+    return () => clearInterval(id);
+  }
+  const partir = (s, conDias) => conDias
+    ? [Math.floor(s / 86400), Math.floor((s % 86400) / 3600), Math.floor((s % 3600) / 60), s % 60]
+    : [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60];
+
+  /* ───────────── El reloj del cumpleaños ───────────── */
+  (function reloj() {
+    const cont = $('#reloj');
+    const intro = $('#reloj-intro');
+    const nota = $('#reloj-nota');
+    const edad = $('#edad');
+    let parar = null;
+
+    function montar(celebrar) {
+      if (parar) parar();
+      const c = cumpleActual();
+      cont.hidden = false;
+      edad.hidden = !nac;
+      if (nac) edad.textContent = c.modo === 'antes' ? `Vas a cumplir ${c.fecha.getFullYear() - nac.getFullYear()}` : `¡${c.fecha.getFullYear() - nac.getFullYear()} años!`;
+
+      if (c.modo === 'antes') {
+        $('#tiempo-ante').textContent = 'cuenta regresiva';
+        $('#tiempo-titulo').textContent = 'Ya casi es tu día';
+        intro.textContent = `Falta esto para el ${c.fecha.toLocaleDateString('es', { day: 'numeric', month: 'long' })}:`;
+        nota.textContent = 'Yo ya lo estoy celebrando.';
+        parar = contador(cont, ['días', 'horas', 'minutos', 'segundos'], () => partir(Math.max(0, Math.floor((c.fecha - Date.now()) / 1000)), true), () => montar(true));
+      } else if (c.modo === 'hoy') {
+        const fin = new Date(c.fecha.getFullYear(), c.fecha.getMonth(), c.fecha.getDate() + 1);
+        $('#tiempo-ante').textContent = 'un pequeño reloj';
+        $('#tiempo-titulo').textContent = 'Hoy el mundo celebra que existes';
+        intro.textContent = 'Hoy es tu cumpleaños, y esto es lo que queda de tu día oficial:';
+        nota.textContent = 'Cuando llegue a cero te voy a seguir celebrando igual.';
+        parar = contador(cont, ['horas', 'minutos', 'segundos'], () => partir(Math.max(0, Math.floor((fin - Date.now()) / 1000)), false), () => {
+          nota.textContent = 'Terminó tu día oficial. Yo sigo celebrándote igual.';
+        });
+        if (celebrar) {
+          FX.fuegos(6);
+          FX.lluvia(120);
+          Musica.fanfarria();
+          avisar(`¡Ya es tu cumpleaños, ${PARA}!`, 6000);
+        }
+      } else {
+        $('#tiempo-ante').textContent = 'un pequeño reloj';
+        $('#tiempo-titulo').textContent = 'Tu día ya pasó. La celebración, no';
+        intro.textContent = `Tu cumpleaños fue hace ${plural(c.dias, 'día', 'días')}.`;
+        nota.textContent = 'Aquí se te sigue celebrando todos los días.';
+        cont.hidden = true;
+        edad.hidden = true;
+        parar = null;
       }
     }
-    tic();
-    setInterval(tic, 1000);
+    montar(false);
+  })();
 
-    if (jun) {
-      const dias = Math.max(0, Math.floor((hoy - jun) / 86400000));
-      $('#juntos').hidden = false;
-      $('#juntos-dias').textContent = dias.toLocaleString('es');
-      $('#juntos-nota').textContent = `Si te diera tres abrazos al día, ya irían ${(dias * 3).toLocaleString('es')}. Y quiero darte muchísimos más.`;
+  /* ───────────── Nuestro primer año ───────────── */
+  (function nosotros() {
+    if (!jun) return;
+    $('#nosotros').hidden = false;
+    $('#nosotros-ante').textContent = `desde el ${jun.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+
+    contador($('#reloj-juntos'), ['días', 'horas', 'minutos', 'segundos'], () => partir(Math.max(0, Math.floor((Date.now() - jun) / 1000)), true));
+
+    const hoy = medianoche(new Date());
+    let y = hoy.getFullYear() - jun.getFullYear();
+    let m = hoy.getMonth() - jun.getMonth();
+    let d = hoy.getDate() - jun.getDate();
+    if (d < 0) { m--; d += new Date(hoy.getFullYear(), hoy.getMonth(), 0).getDate(); }
+    if (m < 0) { y--; m += 12; }
+    const partes = [];
+    if (y) partes.push(plural(y, 'año', 'años'));
+    if (m) partes.push(plural(m, 'mes', 'meses'));
+    if (d) partes.push(plural(d, 'día', 'días'));
+    const dias = Math.max(0, Math.floor((hoy - jun) / DIA));
+    const tiempo = partes.length > 1 ? partes.slice(0, -1).join(', ') + ' y ' + partes[partes.length - 1] : (partes[0] || 'un día');
+    $('#juntos-nota').textContent = `Eso es ${tiempo}. Si te diera tres abrazos al día, ya irían ${(dias * 3).toLocaleString('es')}.`;
+
+    // Lunas llenas desde que empezamos, a partir de la luna nueva del 6 de enero de 2000.
+    const SINODICO = 29.530588853 * DIA;
+    const llena = Date.UTC(2000, 0, 6, 18, 14) + SINODICO / 2;
+    const lunas = Math.max(0, Math.floor((Date.now() - llena) / SINODICO) - Math.floor((jun - llena) / SINODICO));
+
+    const cifras = [];
+    cifras.push([dias.toLocaleString('es'), 'días siendo novios']);
+    cifras.push([`casi ${dias.toLocaleString('es')}`, 'noches durmiendo a tu lado']);
+    cifras.push([String(lunas), lunas === 1 ? 'luna llena que hemos visto juntos' : 'lunas llenas que hemos visto juntos']);
+    if (diaCumple) {
+      const hasta = cumpleActual().fecha;
+      let n = 0;
+      for (let a = jun.getFullYear(); a <= hasta.getFullYear(); a++) {
+        const c = new Date(a, diaCumple[0], diaCumple[1]);
+        if (c >= jun && c <= hasta) n++;
+      }
+      cifras.push([String(n), n === 1 ? 'cumpleaños tuyo conmigo' : 'cumpleaños tuyos conmigo, contando este']);
     }
+    cifras.push(['∞', 'veces que te volvería a elegir']);
+    const ul = $('#cifras');
+    ul.innerHTML = cifras.map(([n, t], i) => `<li class="cifra" style="--i:${i}"><b>${esc(n)}</b><span>${esc(t)}</span></li>`).join('');
+    $$('.cifra', ul).forEach(observar);
+
+    const linea = $('#linea');
+    const historia = Array.isArray(C.historia) ? C.historia : [];
+    if (!historia.length) { linea.hidden = true; return; }
+    historia.forEach((h) => {
+      const f = fecha(h.fecha);
+      const li = document.createElement('li');
+      li.className = 'hito' + (h.destacado ? ' destacado' : '') + (f ? '' : ' abierto-futuro');
+      const cuando = f ? f.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : 'y después…';
+      const foto = h.foto ? `<span class="hito-foto"><img src="${esc(h.foto)}" alt="${esc(h.titulo)}" loading="lazy"></span>` : '';
+      li.innerHTML = `<span class="hito-punto" aria-hidden="true"></span><div class="hito-tarjeta"><span class="hito-fecha">${esc(cuando)}</span><h3 class="hito-titulo">${esc(h.titulo)}</h3><p class="hito-texto">${esc(h.texto)}</p>${foto}</div>`;
+      const img = $('img', li);
+      if (img) img.addEventListener('error', () => img.parentElement.remove(), { once: true });
+      li.addEventListener('visible', () => {
+        if (!h.destacado) return;
+        const r = $('.hito-punto', li).getBoundingClientRect();
+        setTimeout(() => FX.corazones(r.left + r.width / 2, r.top, 10), 400);
+      }, { once: true });
+      linea.appendChild(li);
+      observar(li);
+    });
+
+    let pendiente = false;
+    function avanzar() {
+      pendiente = false;
+      const r = linea.getBoundingClientRect();
+      const v = Math.max(0, Math.min(1, (window.innerHeight * 0.62 - r.top) / r.height));
+      linea.style.setProperty('--avance', v.toFixed(4));
+    }
+    window.addEventListener('scroll', () => { if (!pendiente) { pendiente = true; requestAnimationFrame(avanzar); } }, { passive: true });
+    window.addEventListener('resize', avanzar);
+    avanzar();
   })();
 
   /* ───────────── Cosas que amo de ti ───────────── */

@@ -29,6 +29,7 @@
     <span class="sobre-frente"><span class="mano sobre-para">Para <span data-c="para">Fiorella</span></span></span>
     <span class="sobre-solapa"></span>
     <span class="sello"><span data-inicial="de">J</span></span>
+    <span class="matasellos" id="matasellos" aria-hidden="true" hidden><b id="matasellos-dia">3 NOV</b><small id="matasellos-anio">2026</small><i>con amor</i></span>
   </button>
   <p class="sobre-pista mano">Tócalo cuando estés lista.<br><small>Mejor con el volumen un poquito arriba.</small></p>
 </div>
@@ -44,6 +45,7 @@
     </h1>
     <svg class="trazo" viewBox="0 0 320 40" aria-hidden="true"><path pathLength="1" d="M8 26 C 60 8, 120 34, 170 20 S 270 6, 312 22"/></svg>
     <p class="portada-firma mano">con todo el amor del mundo, <span data-c="de">Josimar</span></p>
+    <p class="portada-fecha" id="portada-fecha" hidden></p>
     <a class="bajar" href="#tiempo"><span>baja despacito</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
   </section>
 
@@ -54,14 +56,24 @@
     </header>
     <div class="reloj-bloque revela">
       <p class="reloj-intro" id="reloj-intro"></p>
+      <p class="edad" id="edad" hidden></p>
       <div class="reloj" id="reloj"></div>
       <p class="reloj-nota mano" id="reloj-nota"></p>
     </div>
-    <div class="reloj-bloque revela" id="juntos" hidden>
-      <p class="reloj-intro">Y llevamos juntos</p>
-      <div class="juntos-num"><span id="juntos-dias">0</span> <small>días</small></div>
+</section>
+
+  <section id="nosotros" class="seccion" hidden>
+    <header class="seccion-cabeza revela">
+      <p class="antetitulo mano" id="nosotros-ante">desde que empezamos</p>
+      <h2>Nuestro primer año</h2>
+    </header>
+    <div class="reloj-bloque revela">
+      <p class="reloj-intro">Llevamos juntos</p>
+      <div class="reloj" id="reloj-juntos"></div>
       <p class="reloj-nota mano" id="juntos-nota"></p>
     </div>
+    <ul class="cifras" id="cifras"></ul>
+    <ol class="linea" id="linea"></ol>
   </section>
 
   <section id="razones" class="seccion">

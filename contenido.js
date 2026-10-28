@@ -2,8 +2,8 @@
   Todo lo que dice la página vive aquí.
   Cambia los textos, las fechas y las fotos a tu gusto: no hace falta tocar nada más.
 
-  - Las fechas van como "AAAA-MM-DD" (por ejemplo "1999-03-14"). Si las dejas en null,
-    la página se adapta sola.
+  - Las fechas van como "AAAA-MM-DD" (por ejemplo "1999-03-14"), salvo el cumpleaños,
+    que va como "MM-DD". Si las dejas en null, la página se adapta sola.
   - Las fotos van en la carpeta fotos/ y se escriben como "fotos/nombre.jpg".
     Si un recuerdo no tiene foto, se muestra un dibujito hecho a mano.
 */
@@ -11,12 +11,28 @@ window.CONTENIDO = {
   para: "Fiorella",
   de: "Josimar",
 
-  // Su fecha de nacimiento. Si es hoy, el reloj cuenta lo que queda de su día;
-  // si no, cuenta cuánto tiempo lleva haciendo más bonito el mundo.
+  // Su cumpleaños, como "MM-DD". Antes de ese día la página cuenta lo que falta;
+  // ese día, cuenta lo que queda del día.
+  cumpleanos: "11-03",
+
+  // Su fecha de nacimiento completa ("AAAA-MM-DD"). Si la pones, aparece su edad.
   fechaNacimiento: null,
 
-  // El día en que empezaron. Si la pones, aparece un contador de días juntos.
-  fechaJuntos: null,
+  // El día en que empezaron: activa la sección "Nuestro primer año".
+  fechaJuntos: "2025-10-17",
+
+  // Momentos de la línea del tiempo. Cámbialos o agrega los tuyos
+  // (primera cita, primer viaje…). "foto" es opcional.
+  historia: [
+    { fecha: "2025-10-17", titulo: "El día que empezamos", texto: "El día en que nos dijimos que sí. No sabía todo lo que venía, pero algo me decía que iba a ser bonito.", foto: null },
+    { fecha: "2025-11-03", titulo: "Tu primer cumpleaños conmigo", texto: "Llevábamos apenas diecisiete días, y yo ya quería que fuera especial para ti.", foto: null },
+    { fecha: "2025-12-25", titulo: "Nuestra primera Navidad", texto: "La primera de muchas. Eso espero, y eso pido.", foto: null },
+    { fecha: "2026-01-01", titulo: "Nuestro primer Año Nuevo", texto: "Empezar un año a tu lado fue el mejor comienzo que pude pedir.", foto: null },
+    { fecha: "2026-02-14", titulo: "Nuestro primer San Valentín", texto: "El primero de los nuestros. Ojalá vengan muchísimos más.", foto: null },
+    { fecha: "2026-10-17", titulo: "Nuestro primer aniversario", texto: "Un año entero eligiéndonos. Y si me preguntas, volvería a elegirte cada uno de esos días.", foto: null },
+    { fecha: "2026-11-03", titulo: "Tu cumpleaños", texto: "El primero con un año entero de nosotros detrás. Por eso esta página.", foto: null, destacado: true },
+    { fecha: null, titulo: "Lo que viene", texto: "Todo lo demás. Y lo quiero contigo.", foto: null }
+  ],
 
   // Cuántas velas lleva el pastel (de 1 a 12).
   velas: 5,
@@ -32,7 +48,8 @@ window.CONTENIDO = {
     "Que me haces querer ser mejor sin pedírmelo nunca.",
     "Tus abrazos. Tienen algo que no he encontrado en ningún otro lugar.",
     "Que contigo puedo ser yo, con todas mis tonterías incluidas.",
-    "Tu voz cuando me dices buenos días.",
+    "Despertar a tu lado. Todavía no me acostumbro a lo bonito que es.",
+    "Que lo nuestro nunca ha sido de pantallas ni de llamadas. Siempre ha sido de estar juntos.",
     "La paciencia que me tienes, que no es poca.",
     "Que cuando me pasa algo bueno, tú eres la primera persona a la que quiero contárselo.",
     "Que eres tú. Así de simple, y así de enorme."
@@ -56,8 +73,8 @@ window.CONTENIDO = {
     {
       dibujo: "luna",
       foto: null,
-      titulo: "Las noches hasta tarde",
-      detras: "Ese sueño que nos gana porque ninguno quiere colgar primero."
+      titulo: "Dormir a tu lado",
+      detras: "Quedarme dormido contigo y despertar contigo. No conozco mejor forma de empezar un día."
     },
     {
       dibujo: "corazones",
@@ -95,6 +112,7 @@ window.CONTENIDO = {
     parrafos: [
       "Llevo días pensando cómo hacer algo que estuviera a la altura de lo que siento por ti, y la verdad es que ninguna página alcanza. Pero quería intentarlo, porque te lo mereces todo.",
       "Gracias por cada día que eliges quedarte a mi lado. Por las risas, por la paciencia, por los abrazos que llegan justo cuando los necesito y por todas esas veces que me haces sentir en casa sin estar en ningún lugar en particular.",
+      "Hace unos días cumplimos nuestro primer año juntos. Un año de dormirnos uno al lado del otro, de despertar juntos y de compartirlo casi todo, y todavía me sorprende lo rápido que se pasó y lo mucho que cambió todo. El año pasado tu cumpleaños llegó cuando apenas llevábamos diecisiete días. Este año llega con un año entero de nosotros, y eso me hace inmensamente feliz.",
       "Hoy es tu día, y quiero decirte algo que a veces no digo en voz alta lo suficiente: eres lo mejor que me ha pasado. Me encanta la persona que eres, la forma en que ves el mundo y la forma en que me ves a mí.",
       "Ojalá este nuevo año te traiga todo lo que sueñas. Y ojalá yo pueda estar ahí para verlo, para aplaudirte y para abrazarte en cada paso.",
       "Feliz cumpleaños, mi amor. Hoy, mañana y todos los días que vengan, te elijo a ti."
@@ -114,13 +132,15 @@ window.CONTENIDO = {
     "Me encanta la vida que tengo contigo.",
     "Eres mi casualidad favorita.",
     "Ojalá te vieras como yo te veo.",
-    "Un beso guardado para cuando nos veamos.",
-    "Contigo hasta el silencio es bonito."
+    "Te debo un beso. Cóbramelo ahora mismo.",
+    "Contigo hasta el silencio es bonito.",
+    "Un año contigo, y todavía me sorprendes.",
+    "El 17 de octubre es mi fecha favorita del calendario. Bueno, después de hoy."
   ],
 
   final: {
     titulo: "Te amo, Fiorella",
-    texto: "Feliz cumpleaños. Hoy, mañana y siempre."
+    texto: "Feliz cumpleaños. Por este año y por todos los que vienen."
   },
 
   // Aparece si toca la luna cinco veces.
