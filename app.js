@@ -204,8 +204,46 @@
       campana(frec(n), ctx.currentTime + 0.01 + cuando, vol, dur);
     }
 
+    function latido(segundos = 6, lpm = 140) {
+      if (!iniciar()) return;
+      if (ctx.state === 'suspended') ctx.resume();
+      const salida = ctx.createGain();
+      salida.gain.value = 0.9;
+      salida.connect(ctx.destination);
+      const t0 = ctx.currentTime + 0.1;
+      const periodo = 60 / lpm;
+      const golpe = (t, vol) => {
+        const o = ctx.createOscillator();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(95, t);
+        o.frequency.exponentialRampToValueAtTime(42, t + 0.12);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(vol, t + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+        o.connect(g);
+        g.connect(salida);
+        o.start(t);
+        o.stop(t + 0.2);
+      };
+      const n = Math.floor(segundos / periodo);
+      for (let i = 0; i < n; i++) {
+        const t = t0 + i * periodo;
+        const suave = Math.min(1, (i + 1) / 4, (n - i) / 4);
+        golpe(t, 0.55 * suave);
+        golpe(t + periodo * 0.32, 0.32 * suave);
+      }
+      if (sonando) {
+        maestro.gain.cancelScheduledValues(ctx.currentTime);
+        maestro.gain.setTargetAtTime(0.25, ctx.currentTime, 0.3);
+        maestro.gain.setTargetAtTime(0.9, t0 + segundos, 0.6);
+      }
+      return segundos;
+    }
+
     return {
       disponible: () => !!(window.AudioContext || window.webkitAudioContext),
+      latido,
       tocar,
       pausar,
       alternar() { sonando ? pausar() : tocar(); },
@@ -746,8 +784,8 @@
     historia.forEach((h) => {
       const f = fecha(h.fecha);
       const li = document.createElement('li');
-      li.className = 'hito' + (h.destacado ? ' destacado' : '') + (f ? '' : ' abierto-futuro');
-      const cuando = f ? f.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : 'y después…';
+      li.className = 'hito' + (h.destacado ? ' destacado' : '') + (f || h.cuando ? '' : ' abierto-futuro');
+      const cuando = f ? f.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) : (h.cuando || 'y después…');
       const foto = h.foto ? `<span class="hito-foto"><img src="${esc(h.foto)}" alt="${esc(h.titulo)}" loading="lazy"></span>` : '';
       li.innerHTML = `<span class="hito-punto" aria-hidden="true"></span><div class="hito-tarjeta"><span class="hito-fecha">${esc(cuando)}</span><h3 class="hito-titulo">${esc(h.titulo)}</h3><p class="hito-texto">${esc(h.texto)}</p>${foto}</div>`;
       const img = $('img', li);
@@ -876,6 +914,7 @@
     if (!lista.length) { $('#recuerdos').hidden = true; return; }
     const P = (d) => `<path pathLength="1" d="${d}"/>`;
     const lleno = (x, y, s) => `<path class="relleno" transform="translate(${x} ${y}) scale(${s})" d="M0 6C-6 2-10-1-10-5C-10-8-8-10-5-10C-3-10-1-9 0-7C1-9 3-10 5-10C8-10 10-8 10-5C10-1 6 2 0 6Z"/>`;
+    const CORA = 'M0 12C-14 4-20-4-14-11C-9-16-3-14 0-8C3-14 9-16 14-11C20-4 14 4 0 12Z';
     const svg = (dentro) => `<svg class="garabato" viewBox="0 0 100 100" aria-hidden="true">${dentro}</svg>`;
     const DIBUJOS = {
       estrella: svg(P('M50 14L59 38L84 39L64 54L71 79L50 65L29 79L36 54L16 39L41 38Z') + P('M82 12v12M76 18h12') + P('M16 70v9M11.5 74.5h9') + lleno(50, 52, 0.7)),
@@ -883,6 +922,9 @@
       luna: svg(P('M60 14A36 36 0 1 0 86 72A28 28 0 0 1 60 14Z') + P('M24 18l2.5 6.5 6.5 2.5-6.5 2.5-2.5 6.5-2.5-6.5-6.5-2.5 6.5-2.5Z') + P('M80 22v8M76 26h8') + P('M84 88v6M81 91h6') + lleno(76, 54, 0.6)),
       corazones: svg(P('M50 84C22 66 10 46 22 30C32 18 46 22 50 34C54 22 68 18 78 30C90 46 78 66 50 84Z') + P('M50 70C34 60 28 50 34 42C39 36 46 38 50 45C54 38 61 36 66 42C72 50 66 60 50 70Z') + lleno(84, 18, 0.55) + lleno(16, 16, 0.45)),
       casa: svg(P('M16 52L50 22L84 52') + P('M26 44V80H74V44') + P('M44 80V62H56V80') + P('M64 34V24H72V41') + P('M6 80H94') + lleno(50, 50, 0.55)),
+      papas: svg(P('M28 46L35 86H65L72 46Z') + P('M35 46L31 16') + P('M42 46L41 11') + P('M50 46L51 9') + P('M58 46L60 13') + P('M65 46L69 19') + P('M24 46H76') + P('M82 22l2 2M88 30l2 2M80 36l2 2') + lleno(50, 68, 0.75)),
+      tele: svg(P('M16 30H84A6 6 0 0 1 90 36V70A6 6 0 0 1 84 76H16A6 6 0 0 1 10 70V36A6 6 0 0 1 16 30Z') + P('M38 16L50 30L62 16') + P('M50 76V86M36 86H64') + P('M20 40l4 4M76 62l4 4') + lleno(50, 55, 0.95)),
+      tres: svg(`<path pathLength="1" transform="translate(33 40) scale(1.15)" d="${CORA}"/>` + `<path pathLength="1" transform="translate(67 40) scale(1.15)" d="${CORA}"/>` + `<path pathLength="1" transform="translate(50 74) scale(.62)" d="${CORA}"/>` + lleno(50, 76, 0.42)),
       musica: svg(`<ellipse pathLength="1" cx="34" cy="72" rx="9" ry="7"/>` + P('M43 72V28L78 20V62') + `<ellipse pathLength="1" cx="69" cy="62" rx="9" ry="7"/>` + P('M43 38L78 30') + P('M10 46q6-8 12 0t12 0') + lleno(20, 24, 0.6))
     };
     const TONOS = ['#fbe6c4', '#d9efe9', '#e6def8', '#f7d9cf', '#f4d4e0', '#dfe6f7'];
@@ -1084,6 +1126,48 @@
         cont.appendChild(el);
       });
     }
+  })();
+
+  /* ───────────── El bebé ───────────── */
+  (function bebe() {
+    const b = C.bebe;
+    const base = b && fecha(b.alDia);
+    if (!b || !base || !(b.semanas > 0)) return;
+    const seccion = $('#bebe');
+    seccion.hidden = false;
+
+    // Un trazo de monitor con seis latidos; el barrido dura lo que seis latidos a 140 por minuto.
+    const tramo = (x) => `L${x} 64L${x + 28} 64L${x + 34} 56L${x + 40} 64L${x + 47} 64L${x + 51} 74L${x + 56} 16L${x + 61} 96L${x + 66} 64L${x + 77} 64L${x + 85} 53L${x + 93} 64L${x + 100} 64`;
+    let d = 'M0 64';
+    for (let i = 0; i < 6; i++) d += tramo(i * 100);
+    $('#ecg-fondo').setAttribute('d', d);
+    $('#ecg-luz').setAttribute('d', d);
+
+    const hoy = medianoche(new Date());
+    const total = Math.max(0, Math.round(b.semanas * 7 + (hoy - base) / DIA));
+    const semanas = Math.floor(total / 7);
+    const dias = total % 7;
+    $('#bebe-semanas').textContent = String(semanas);
+    $('#bebe-dias').textContent = dias ? `semanas y ${plural(dias, 'día', 'días')}` : 'semanas';
+    $('#bebe-texto').textContent = b.texto || '';
+    const faltan = Math.round((280 - total) / 7);
+    const cierre = b.cierre ? ' ' + b.cierre : '';
+    $('#bebe-nota').textContent = faltan > 1
+      ? `Faltan unas ${faltan} semanas para conocer a nuestro bebé.${cierre}`
+      : `Ya casi conocemos a nuestro bebé.${cierre}`;
+
+    const btn = $('#latido');
+    if (!Musica.disponible()) { btn.hidden = true; return; }
+    let tLatido = 0;
+    btn.addEventListener('click', () => {
+      const dura = Musica.latido(6, 140) || 6;
+      seccion.classList.add('latiendo');
+      btn.disabled = true;
+      const r = $('.monitor', seccion).getBoundingClientRect();
+      FX.corazones(r.left + r.width / 2, r.top + r.height / 2, 8);
+      clearTimeout(tLatido);
+      tLatido = setTimeout(() => { seccion.classList.remove('latiendo'); btn.disabled = false; }, dura * 1000);
+    });
   })();
 
   /* ───────────── La carta ───────────── */

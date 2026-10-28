@@ -12,8 +12,9 @@ Página de cumpleaños hecha por Josimar para Fiorella, para el 3 de noviembre d
 6. **Nuestros pequeños momentos**: polaroids que se voltean y muestran una nota detrás.
 7. **Un pastel** con velas que se soplan tocándolas (o con el micrófono, de verdad).
 8. **Un regalo** que tiembla antes de abrirse y trae vales canjeables.
-9. **Una carta** que se escribe sola, palabra por palabra.
-10. **Nuestro cielo**: estrellas que dicen cosas bonitas y que al final forman un corazón.
+9. **Alguien más te está celebrando**: las semanas de embarazo calculadas al día, un monitor de latidos y un botón para escucharlo.
+10. **Una carta** que se escribe sola, palabra por palabra.
+11. **Nuestro cielo**: estrellas que dicen cosas bonitas y que al final forman un corazón.
 
 Escondidos: tocar dos veces en cualquier parte suelta corazones, y escribir «teamo» en el teclado hace llover corazones.
 
@@ -22,6 +23,7 @@ Escondidos: tocar dos veces en cualquier parte suelta corazones, y escribir «te
 Todo el texto vive en **`contenido.js`**: nombres, razones, recuerdos, vales, la carta y los mensajes de las estrellas.
 
 - `cumpleanos` va como `"MM-DD"`; `fechaNacimiento` (para mostrar su edad) y `fechaJuntos`, como `"AAAA-MM-DD"`.
+- `bebe.semanas` y `bebe.alDia` dicen cuántas semanas tenía en esa fecha; la página calcula el resto.
 - `historia` son los momentos de la línea del tiempo: cámbialos o agrega los vuestros.
 - Las fotos van en la carpeta `fotos/` y se enlazan desde `recuerdos` con `foto: "fotos/nombre.jpg"`.
 
