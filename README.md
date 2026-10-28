@@ -7,7 +7,7 @@ Página de cumpleaños hecha por Josimar para Fiorella, para el 3 de noviembre d
 1. **Un sobre sellado** que se abre al tocarlo y hace sonar una cajita musical con el «Cumpleaños feliz».
 2. **Su nombre** apareciendo letra por letra bajo una luna (tócala cinco veces: tiene un secreto).
 3. **Un reloj**: antes del 3 de noviembre cuenta lo que falta; ese día, lo que queda del día. Si la página está abierta a medianoche, lo celebra sola.
-5. **Nuestro primer año**: contador en vivo desde el 17 de octubre de 2025, cifras del año (noches juntos, lunas llenas) y una línea del tiempo que se ilumina al bajar.
+4. **Nuestro primer año**: contador en vivo desde el 17 de octubre de 2025, cifras del año (noches juntos, lunas llenas) y una línea del tiempo que se ilumina al bajar.
 5. **Cosas que amo de ti**: un mazo de tarjetas que se pasan deslizando.
 6. **Nuestros pequeños momentos**: polaroids que se voltean y muestran una nota detrás.
 7. **Un pastel** con velas que se soplan tocándolas (o con el micrófono, de verdad).
