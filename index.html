@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es" class="bloqueado">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feliz cumpleaños, Fiorella</title>
+<meta name="description" content="Una sorpresa de Josimar para Fiorella.">
+<meta name="theme-color" content="#120d22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500;1,600&family=Nunito:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+
+<canvas id="cielo" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<!-- El sobre: lo primero que ve -->
+<div id="pantalla-sobre" class="pantalla-sobre">
+  <p class="sobre-antes mano">Shh… esto es una sorpresa</p>
+  <button id="sobre" class="sobre" type="button" aria-label="Abrir el sobre">
+    <span class="sobre-fondo"></span>
+    <span class="sobre-carta">
+      <span class="mano">Feliz cumpleaños,<br>mi amor</span>
+    </span>
+    <span class="sobre-bolsillo"></span>
+    <span class="sobre-frente"><span class="mano sobre-para">Para <span data-c="para">Fiorella</span></span></span>
+    <span class="sobre-solapa"></span>
+    <span class="sello"><span data-inicial="de">J</span></span>
+  </button>
+  <p class="sobre-pista mano">Tócalo cuando estés lista.<br><small>Mejor con el volumen un poquito arriba.</small></p>
+</div>
+
+<main id="historia">
+
+  <section id="inicio" class="portada">
+    <button id="luna" class="luna" type="button" aria-label="La luna"></button>
+    <p class="portada-antes mano">Hoy el cielo está más bonito porque…</p>
+    <h1 class="titulo">
+      <span class="titulo-linea" data-letras>Feliz cumpleaños,</span>
+      <span class="titulo-nombre" data-letras data-c="para">Fiorella</span>
+    </h1>
+    <svg class="trazo" viewBox="0 0 320 40" aria-hidden="true"><path pathLength="1" d="M8 26 C 60 8, 120 34, 170 20 S 270 6, 312 22"/></svg>
+    <p class="portada-firma mano">con todo el amor del mundo, <span data-c="de">Josimar</span></p>
+    <a class="bajar" href="#tiempo"><span>baja despacito</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+  </section>
+
+  <section id="tiempo" class="seccion">
+    <header class="seccion-cabeza revela">
+      <p class="antetitulo mano" id="tiempo-ante">un pequeño reloj</p>
+      <h2 id="tiempo-titulo">Hoy el mundo celebra que existes</h2>
+    </header>
+    <div class="reloj-bloque revela">
+      <p class="reloj-intro" id="reloj-intro"></p>
+      <div class="reloj" id="reloj"></div>
+      <p class="reloj-nota mano" id="reloj-nota"></p>
+    </div>
+    <div class="reloj-bloque revela" id="juntos" hidden>
+      <p class="reloj-intro">Y llevamos juntos</p>
+      <div class="juntos-num"><span id="juntos-dias">0</span> <small>días</small></div>
+      <p class="reloj-nota mano" id="juntos-nota"></p>
+    </div>
+  </section>
+
+  <section id="razones" class="seccion">
+    <header class="seccion-cabeza revela">
+      <p class="antetitulo mano">no caben todas, pero lo intenté</p>
+      <h2>Cosas que amo de ti</h2>
+    </header>
+    <div class="mazo-zona revela">
+      <div class="mazo" id="mazo" aria-live="polite"></div>
+      <div class="mazo-controles">
+        <span class="mazo-cuenta" id="mazo-cuenta">1 de 14</span>
+        <button class="boton boton-suave" id="mazo-sig" type="button">Siguiente</button>
+      </div>
+      <p class="pista mano">Desliza la tarjeta o tócala</p>
+    </div>
+  </section>
+
+  <section id="recuerdos" class="seccion">
+    <header class="seccion-cabeza revela">
+      <p class="antetitulo mano">pedacitos de nosotros</p>
+      <h2>Nuestros pequeños momentos</h2>
+    </header>
+    <div class="tablero" id="tablero"></div>
+    <p class="pista mano">Toca una foto para darle la vuelta</p>
+  </section>
+
+  <section id="deseo" class="seccion deseo">
+    <div class="deseo-luz" id="deseo-luz" aria-hidden="true"></div>
+    <header class="seccion-cabeza revela">
+      <p class="antetitulo mano">cierra los ojos un momento</p>
+      <h2>Pide un deseo</h2>
+      <p class="seccion-texto">Cuando lo tengas, sopla las velas. Puedes tocarlas una por una.</p>
+    </header>
+    <div class="pastel-zona revela">
+      <div class="pastel" id="pastel">
+        <div class="velas" id="velas"></div>
+        <div class="piso piso-3"></div>
+        <div class="piso piso-2"></div>
+        <div class="piso piso-1"></div>
+        <div class="plato"></div>
+      </div>
+    </div>
+    <div class="deseo-acciones">
+      <button class="boton boton-suave" id="microfono" type="button" hidden>Soplar de verdad, con el micrófono</button>
+    </div>
+    <div class="deseo-mensaje" id="deseo-mensaje" hidden>
+      <p class="mano grande">¡Que se te cumpla!</p>
+      <p>Y si ese deseo necesita ayuda, aquí estoy yo para ayudarte a cumplirlo.</p>
+      <button class="boton boton-suave" id="reencender" type="button">Volver a encender las velas</button>
+    </div>
+  </section>
+
+  <section id="regalo" class="seccion">
+    <header class="seccion-cabeza revela">
+      <p class="antetitulo mano">no es mucho, pero es de corazón</p>
+      <h2>Algo para ti</h2>
+    </header>
+    <div class="regalo-zona revela">
+      <div class="rayos" aria-hidden="true"></div>
+      <button class="caja" id="caja" type="button" aria-label="Abrir el regalo">
+        <span class="caja-tapa"><span class="lazo"></span></span>
+        <span class="caja-base"></span>
+      </button>
+      <p class="regalo-pista mano" id="regalo-pista">Tócalo, a ver qué tiene…</p>
+    </div>
+    <div class="vales" id="vales" hidden></div>
+    <p class="pista mano" id="vales-pista" hidden>Cada vale se canjea conmigo. Toca «Canjear» cuando quieras usar uno.</p>
+  </section>
+
+  <section id="carta" class="seccion">
+    <header class="seccion-cabeza revela">
+      <p class="antetitulo mano">léela despacito</p>
+      <h2>Una carta para ti</h2>
+    </header>
+    <article class="papel" id="papel"></article>
+  </section>
+
+  <section id="final" class="seccion final">
+    <header class="seccion-cabeza revela">
+      <p class="antetitulo mano">mira hacia arriba</p>
+      <h2>Nuestro cielo</h2>
+      <p class="seccion-texto">Cada estrella tiene algo que decirte. Tócalas.</p>
+    </header>
+    <div class="constelacion" id="constelacion">
+      <canvas id="estrellas" aria-hidden="true"></canvas>
+      <div class="susurro" id="susurro" role="status" hidden></div>
+      <div class="final-texto" id="final-texto" hidden>
+        <p class="final-titulo" id="final-titulo"></p>
+        <p class="final-sub mano" id="final-sub"></p>
+      </div>
+    </div>
+    <div class="final-acciones">
+      <button class="boton" id="ultima" type="button">Una última cosa…</button>
+      <button class="boton boton-suave" id="otra-vez" type="button" hidden>Escuchar nuestra canción otra vez</button>
+    </div>
+  </section>
+
+  <footer class="pie">
+    <p class="mano">Hecho con muchísimo amor por <span data-c="de">Josimar</span>, para <span data-c="para">Fiorella</span>.</p>
+  </footer>
+</main>
+
+<button id="musica" class="musica" type="button" aria-label="Música" aria-pressed="false" hidden>
+  <span class="barras" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+</button>
+<div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+
+<script src="contenido.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
