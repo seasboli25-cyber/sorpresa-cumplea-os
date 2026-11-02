@@ -52,7 +52,7 @@ window.CONTENIDO = {
 
   // Tu número de WhatsApp con código de país y sin espacios ni "+" (por ejemplo
   // "50688887777"). Con él, al canjear un vale le abre WhatsApp con el mensaje listo.
-  whatsapp: null,
+  whatsapp: "50670855300",
 
   // El secreto de "lumos": aparece en la oscuridad y se busca con la luz.
   lumos: {
