@@ -702,7 +702,7 @@
       Musica.tintineo();
       if (toques === 5) {
         avisar(C.secretoLuna || 'Encontraste el secreto de la luna.', 6500);
-        setTimeout(() => avisar('Y si mantienes el dedo sobre la luna, pasa algo más…', 5000), 7200);
+        setTimeout(() => avisar('Prueba dejando el dedo sobre la luna.', 5000), 7200);
         FX.lluviaCorazones(60);
         Musica.fanfarria();
       }
@@ -772,8 +772,8 @@
     candadoActivo = true;
     pantalla.classList.add('con-candado');
     $('#candado').hidden = false;
-    titulo.textContent = `No abrir antes del ${desde.toLocaleDateString('es', { day: 'numeric', month: 'long' })}`;
-    pista.innerHTML = 'Todavía no, mi amor.<br><small>Lo preparé para ti. Quiero que lo abras cuando empiece tu día.</small>';
+    titulo.textContent = `Se abre el ${desde.toLocaleDateString('es', { day: 'numeric', month: 'long' })}`;
+    pista.innerHTML = 'Todavía no, mi amor.<br><small>Te lo guardé para el 3. Apenas sea medianoche lo puedes abrir.</small>';
 
     const falta = () => {
       const s = Math.max(0, Math.ceil((desde - Date.now()) / 1000));
@@ -782,11 +782,11 @@
       return d ? `${plural(d, 'día', 'días')} y ${hms}` : hms;
     };
     const frases = [
-      () => 'Todavía no, mi amor.',
-      () => 'Paciencia… ya casi.',
+      () => 'Todavía no, amor. Falta que sea 3.',
+      () => 'Ya casi. Aguántame un poquito.',
       () => 'Ya sé que no te gusta que te diga que no… pero esta vez vale la pena.',
-      () => 'Sé que da curiosidad. Yo también tengo ganas de que lo veas.',
-      () => `Faltan ${falta()}. Prometo que vale la pena.`
+      () => 'A mí también me urge que veas lo que te hice.',
+      () => `Faltan ${falta()}. Apenas sea la hora puedes abrirlo.`
     ];
     let i = 0;
     sobre.addEventListener('animationend', (e) => { if (e.animationName === 'no-todavia') sobre.classList.remove('no-todavia'); });
@@ -868,16 +868,16 @@
         $('#tiempo-ante').textContent = 'cuenta regresiva';
         $('#tiempo-titulo').textContent = 'Ya casi es tu día';
         intro.textContent = `Falta esto para el ${c.fecha.toLocaleDateString('es', { day: 'numeric', month: 'long' })}:`;
-        nota.textContent = 'Yo ya lo estoy celebrando.';
+        nota.textContent = 'Yo ya tengo ganas de que llegue.';
         parar = contador(cont, ['días', 'horas', 'minutos', 'segundos'], () => partir(Math.max(0, Math.floor((c.fecha - Date.now()) / 1000)), true), () => montar(true));
       } else if (c.modo === 'hoy') {
         const fin = new Date(c.fecha.getFullYear(), c.fecha.getMonth(), c.fecha.getDate() + 1);
-        $('#tiempo-ante').textContent = 'un pequeño reloj';
-        $('#tiempo-titulo').textContent = 'Hoy el mundo celebra que existes';
-        intro.textContent = 'Hoy es tu cumpleaños, y esto es lo que queda de tu día oficial:';
-        nota.textContent = 'Cuando llegue a cero te voy a seguir celebrando igual.';
+        $('#tiempo-ante').textContent = 'tu cumpleaños';
+        $('#tiempo-titulo').textContent = 'Hoy te toca a ti';
+        intro.textContent = `A este ${c.fecha.toLocaleDateString('es', { day: 'numeric', month: 'long' })} le quedan:`;
+        nota.textContent = 'Aunque se acabe el día, el chineo sigue.';
         parar = contador(cont, ['horas', 'minutos', 'segundos'], () => partir(Math.max(0, Math.floor((fin - Date.now()) / 1000)), false), () => {
-          nota.textContent = 'Terminó tu día oficial. Yo sigo celebrándote igual.';
+          nota.textContent = 'Ya pasó medianoche. El chineo sigue.';
         });
         if (celebrar) {
           FX.fuegos(6);
@@ -887,9 +887,9 @@
         }
       } else {
         $('#tiempo-ante').textContent = 'un pequeño reloj';
-        $('#tiempo-titulo').textContent = 'Tu día ya pasó. La celebración, no';
+        $('#tiempo-titulo').textContent = 'Todavía podemos celebrar';
         intro.textContent = `Tu cumpleaños fue hace ${plural(c.dias, 'día', 'días')}.`;
-        nota.textContent = 'Aquí se te sigue celebrando todos los días.';
+        nota.textContent = 'Si quieres seguir celebrando, yo me apunto.';
         cont.hidden = true;
         edad.hidden = true;
         parar = null;
@@ -918,7 +918,7 @@
     if (d) partes.push(plural(d, 'día', 'días'));
     const dias = Math.max(0, Math.floor((hoy - jun) / DIA));
     const tiempo = partes.length > 1 ? partes.slice(0, -1).join(', ') + ' y ' + partes[partes.length - 1] : (partes[0] || 'un día');
-    $('#juntos-nota').textContent = `Eso es ${tiempo}. Si te diera tres abrazos al día, ya irían ${(dias * 3).toLocaleString('es')}.`;
+    $('#juntos-nota').textContent = `Eso es ${tiempo}. A tres abrazos por día, ya van unos ${(dias * 3).toLocaleString('es')}. Me parecen pocos.`;
 
     // Lunas llenas desde que empezamos, a partir de la luna nueva del 6 de enero de 2000.
     const SINODICO = 29.530588853 * DIA;
@@ -928,7 +928,7 @@
     const cifras = [];
     cifras.push([dias.toLocaleString('es'), 'días siendo novios']);
     cifras.push([`casi ${dias.toLocaleString('es')}`, 'noches durmiendo a tu lado']);
-    cifras.push([String(lunas), lunas === 1 ? 'luna llena que hemos visto juntos' : 'lunas llenas que hemos visto juntos']);
+    cifras.push([String(lunas), lunas === 1 ? 'luna llena desde que empezamos' : 'lunas llenas desde que empezamos']);
     if (diaCumple) {
       const hasta = cumpleActual().fecha;
       let n = 0;
@@ -1189,7 +1189,7 @@
       try {
         flujo = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
       } catch (e) {
-        avisar('No pude usar el micrófono. Puedes soplar tocando cada vela.');
+        avisar('No se pudo activar el micrófono. Toca las velas para apagarlas.');
         btnMic.hidden = true;
         return;
       }
@@ -1200,13 +1200,13 @@
       fuente.connect(an);
       const datos = new Float32Array(an.fftSize);
       let fuerte = 0, ultimo = 0, vivo = true;
-      btnMic.textContent = 'Te escucho… sopla fuerte';
+      btnMic.textContent = 'Ahora sopla hacia el micrófono';
       detenerMic = () => {
         vivo = false;
         flujo.getTracks().forEach((t) => t.stop());
         ac.close();
         detenerMic = null;
-        btnMic.textContent = 'Soplar de verdad, con el micrófono';
+        btnMic.textContent = 'Usar el micrófono para soplar';
         velas.forEach((v) => v.classList.remove('inclinada'));
       };
       (function escuchar(ts) {
@@ -1235,11 +1235,11 @@
     const zona = caja.parentElement;
     const pista = $('#regalo-pista');
     const cont = $('#vales');
-    const frases = ['Uy… parece que pesa', 'Algo se mueve ahí dentro…', '¡Una vez más!'];
+    const frases = ['Uy… parece que pesa', 'Algo se mueve ahí dentro…', 'Ya casi. Uno más.'];
     let toques = 0;
     const canjeados = guardado.leer('sorpresa-vales') || {};
     const whatsapp = String(C.whatsapp || '').replace(/\D/g, '');
-    if (whatsapp) $('#vales-pista').textContent = 'Toca «Canjear» para abrir WhatsApp con el mensaje listo para enviar.';
+    if (whatsapp) $('#vales-pista').textContent = 'Toca «Canjear» y se abrirá WhatsApp con un mensaje para mí.';
 
     caja.addEventListener('click', () => {
       if (caja.classList.contains('abierta')) return;
@@ -1261,7 +1261,7 @@
       caja.classList.add('abierta');
       caja.setAttribute('aria-label', 'Regalo abierto');
       zona.classList.add('abierta');
-      pista.textContent = 'Son para ti. Todos.';
+      pista.textContent = 'Ahora sí, escoge con cuál empiezas.';
       Musica.fanfarria();
       const r = caja.getBoundingClientRect();
       FX.confeti(r.left + r.width / 2, r.top + r.height * 0.3, 180, 1.15);
@@ -1291,10 +1291,10 @@
           Musica.fanfarria();
           FX.corazones(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2, 10);
           if (whatsapp) {
-            avisar(`¡Canjeado! Mándale el mensaje a ${DE} y te lo cumple.`);
+            avisar('Vale canjeado. Mándame el mensaje para ponernos de acuerdo.');
             enlace.click();
           } else {
-            avisar(`¡Canjeado! Enséñaselo a ${DE} para cobrarlo.`);
+            avisar('Vale canjeado. Enséñamelo cuando quieras cobrarlo.');
           }
         });
         cont.appendChild(el);
@@ -1388,7 +1388,7 @@
     let nacimiento = 0;
 
     $('#final-titulo').textContent = (C.final && C.final.titulo) || `Te amo, ${PARA}`;
-    $('#final-sub').textContent = (C.final && C.final.texto) || 'Feliz cumpleaños.';
+    $('#final-sub').textContent = (C.final && C.final.texto) || 'Feliz cumpleaños, mi amor.';
 
     function crear() {
       const lista = [];

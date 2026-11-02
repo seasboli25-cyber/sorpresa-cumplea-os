@@ -25,15 +25,15 @@ window.CONTENIDO = {
   // (primera cita, primer viaje…). "foto" es opcional; "cuando" reemplaza a la fecha
   // si no la recuerdas exacta.
   historia: [
-    { fecha: "2025-10-17", titulo: "El día que empezamos", texto: "El día en que nos dijimos que sí. No sabía todo lo que venía, pero algo me decía que iba a ser bonito.", foto: null },
-    { fecha: "2025-11-03", titulo: "Tu primer cumpleaños conmigo", texto: "Llevábamos apenas diecisiete días, y yo ya quería que fuera especial para ti.", foto: null },
-    { fecha: "2025-12-25", titulo: "Nuestra primera Navidad", texto: "La primera de muchas. Eso espero, y eso pido.", foto: null },
-    { fecha: "2026-01-01", titulo: "Nuestro primer Año Nuevo", texto: "Empezar un año a tu lado fue el mejor comienzo que pude pedir.", foto: null },
-    { fecha: "2026-02-14", titulo: "Nuestro primer San Valentín", texto: "El primero de los nuestros. Ojalá vengan muchísimos más.", foto: null },
-    { fecha: null, cuando: "este año", titulo: "Cuando supimos que íbamos a ser tres", texto: "El día en que supimos que ya no íbamos a ser solo dos. La noticia más bonita que me han dado.", foto: null },
-    { fecha: "2026-10-17", titulo: "Nuestro primer aniversario", texto: "Un año entero eligiéndonos. Y si me preguntas, volvería a elegirte cada uno de esos días.", foto: null },
-    { fecha: "2026-11-03", titulo: "Tu cumpleaños", texto: "El primero con un año entero de nosotros detrás. Por eso esta página.", foto: null, destacado: true },
-    { fecha: null, titulo: "Lo que viene", texto: "Conocer a nuestro bebé. Y todo lo demás, contigo.", foto: null }
+    { fecha: "2025-10-17", titulo: "Empezamos tú y yo", texto: "Ese día empezamos a ser novios. Me gusta tener una fecha tan nuestra.", foto: null },
+    { fecha: "2025-11-03", titulo: "Tu primer cumple conmigo", texto: "Llevábamos apenas diecisiete días. Ya desde ahí quería verte feliz.", foto: null },
+    { fecha: "2025-12-25", titulo: "La primera Navidad", texto: "La primera siendo novios. Nos quedan un montón.", foto: null },
+    { fecha: "2026-01-01", titulo: "Nuestro primer Año Nuevo", texto: "El primero de novios. Me gustó empezar el año sabiendo que estabas conmigo.", foto: null },
+    { fecha: "2026-02-14", titulo: "Nuestro primer San Valentín", texto: "El primero de los nuestros. Quiero muchos más contigo.", foto: null },
+    { fecha: null, cuando: "este año", titulo: "Vamos a ser papás", texto: "Este año supimos que venía nuestro bebé. Todavía me emociona escribir eso.", foto: null },
+    { fecha: "2026-10-17", titulo: "Un año juntos", texto: "Entre dormir juntos y compartir casi todo, a mí se me pasó rapidísimo.", foto: null },
+    { fecha: "2026-11-03", titulo: "Hoy te celebro", texto: "Tu segundo cumpleaños conmigo, esta vez esperando a nuestro bebé. Hoy te toca que te chineen.", foto: null, destacado: true },
+    { fecha: null, titulo: "Lo que viene", texto: "Conocer a nuestro bebé y aprender juntos a ser papás. Lo demás, contigo.", foto: null }
   ],
 
   // El embarazo: cuántas semanas tenía en la fecha "alDia". La página calcula
@@ -41,7 +41,7 @@ window.CONTENIDO = {
   bebe: {
     semanas: 24,
     alDia: "2026-10-28",
-    texto: "Este cumpleaños no lo celebramos solos. Llevas a nuestro bebé contigo, y no hay un día en que no me sorprenda lo fuerte, lo paciente y lo increíble que eres.",
+    texto: "Qué loco pensar que nuestro bebé está hecho de lo mismo que las estrellas, con un poquito tuyo y otro poquito mío. Tengo unas ganas tremendas de verle la carita contigo.",
     cierre: "Mientras tanto, yo me encargo de chinearlos a los dos."
   },
 
@@ -64,115 +64,114 @@ window.CONTENIDO = {
   velas: 5,
 
   razones: [
-    "Tu risa. Sobre todo esa que se te escapa cuando intentas no reírte.",
-    "Que contigo hasta un día cualquiera se siente como un plan.",
-    "Cómo me miras cuando crees que no me doy cuenta.",
-    "Que eres caprichosa, y que a mí me encanta cumplirte cada capricho.",
-    "Lo bonita que te ves cuando te enojas porque te dije que no. Aunque los dos sabemos cómo termina eso.",
-    "Que te encante que te chinee. A mí me encanta chinearte todavía más.",
-    "Lo mucho que te gusta dormir. Y que yo tenga la suerte de verte dormida.",
-    "Despertar a tu lado. Todavía no me acostumbro a lo bonito que es.",
-    "Que lo nuestro nunca ha sido de pantallas ni de llamadas. Siempre ha sido de estar juntos.",
-    "Que le pones sal a todo, y aun así eres lo más dulce que tengo.",
-    "Que me hayas hecho un lugar en tus mundos: Hogwarts, el Grey Sloan y los Vengadores.",
-    "Tus abrazos. Tienen algo que no he encontrado en ningún otro lugar.",
-    "Lo valiente que eres, aunque a veces tú no lo veas.",
-    "Lo increíble que eres llevando a nuestro bebé. Cada semana te admiro más.",
-    "Que vas a ser la mejor mamá del mundo. Ya lo eres.",
-    "Que eres tú. Así de simple, y así de enorme."
+    "Tu risa, sobre todo cuando intentas aguantarla y no puedes.",
+    "Despertarme y encontrarte a la par mía.",
+    "Cómo me miras cuando crees que no me doy cuenta. Sí me doy cuenta.",
+    "Tus caprichos. Me quejo, pero me encanta cumplirlos.",
+    "Que hasta cuando te enojas conmigo me sigues gustando.",
+    "Que te encante que te chinee. A mí me encanta más.",
+    "Lo en serio que te tomas dormir. Y que me toque verte dormida.",
+    "Pasar un martes cualquiera contigo.",
+    "Que casi nunca tenemos que llamarnos porque ya estamos juntos.",
+    "Que le echas sal a todo. Hasta a lo que ya trae sal.",
+    "Que ya veo un Tropical de melocotón y pienso en ti.",
+    "Que me metiste a Hogwarts, al Grey Sloan y a los Vengadores. Ya no hay vuelta atrás.",
+    "Poder estar contigo en silencio, sin tener que llenar el rato hablando.",
+    "Verte con esa pancita. Cada semana me pareces más bonita.",
+    "Imaginarte con nuestro bebé en brazos. Ya quiero que llegue ese día.",
+    "Que de todo el tiempo que tiene el universo, nos tocó coincidir en el mismo ratito."
   ],
-  razonFinal: "Y la lista sigue. Contigo nunca se termina.",
+  razonFinal: "Me faltaron cosas. Ven y te digo las demás.",
 
   // dibujo: estrella, papas, luna, tele, tres, casa, tazas, corazones, musica
   recuerdos: [
     {
       dibujo: "estrella",
       foto: null,
-      titulo: "El día en que llegaste",
-      detras: "No sabía que ese día me estaba cambiando la vida. Ahora no me imagino una sin ti."
+      titulo: "Desde aquel octubre",
+      detras: "El 17 de octubre empezamos. Ese día no supe que me estaba cambiando la vida. Lo supe después."
     },
     {
       dibujo: "papas",
       foto: null,
-      titulo: "Papas con mucha sal",
-      detras: "Y un Tropical de melocotón bien frío. Tu combinación perfecta, y yo feliz de llevártela."
+      titulo: "Papas y Tropical",
+      detras: "Papas bien saladas y un Tropical de melocotón bien frío. Ya me sé el pedido de memoria."
     },
     {
       dibujo: "luna",
       foto: null,
       titulo: "Dormir a tu lado",
-      detras: "Quedarme dormido contigo y despertar contigo. Aunque tú siempre pidas cinco minutos más."
+      detras: "Tú durmiendo tranquila y yo sin ninguna gana de levantarme."
     },
     {
       dibujo: "tele",
       foto: null,
-      titulo: "Nuestras maratones",
-      detras: "Grey's, Marvel o Harry Potter. Da igual qué pongamos: lo mejor es verlo pegaditos."
+      titulo: "¿Qué vemos hoy?",
+      detras: "Grey's, Harry Potter o Marvel. Tú escoges y yo me acomodo pegadito a ti."
     },
     {
       dibujo: "tres",
       foto: null,
       titulo: "Ahora somos tres",
-      detras: "Tú, yo y quien viene en camino. La noticia más bonita de mi vida."
+      detras: "Todavía falta para verle la carita y yo ya cuento los días."
     },
     {
       dibujo: "casa",
       foto: null,
-      titulo: "Mi lugar favorito",
-      detras: "No es un sitio. Es estar contigo."
+      titulo: "Contigo estoy a gusto",
+      detras: "Cualquier lugar me sirve si estás tú. Hasta cuando el plan es no hacer nada."
     }
   ],
 
   vales: [
-    { titulo: "Chineo ilimitado", detalle: "Una tarde entera de mimos, sin que tengas que pedirlo dos veces." },
-    { titulo: "Un sí", detalle: "A lo que sea, sin discutir y sin poner cara. Úsalo con sabiduría." },
-    { titulo: "Maratón de Grey's", detalle: "Tú eliges la temporada. Yo pongo la manta, los pañuelos y la paciencia." },
-    { titulo: "Noche de saga", detalle: "Harry Potter o Marvel, tú decides. Yo llevo las papas con extra sal y el Tropical de melocotón bien frío." },
-    { titulo: "Dormir hasta que quieras", detalle: "Una mañana sin alarmas ni prisas. Yo me encargo de todo lo demás." },
-    { titulo: "Masaje de pies y espalda", detalle: "Que estas semanas se lo han ganado de sobra." },
-    { titulo: "Un antojo a cualquier hora", detalle: "Papas, Tropical o lo que el bebé pida. Aunque sean las tres de la mañana." },
-    { titulo: "Desayuno en la cama", detalle: "Con todo lo que te gusta y un beso de buenos días." }
+    { titulo: "Chineo ilimitado", detalle: "Una tarde entera de mimos, sin estar viendo la hora. Tú me dices qué se te antoja." },
+    { titulo: "Un sí", detalle: "A lo que sea, sin peros y sin poner cara. Ya sé que este te va a gustar." },
+    { titulo: "Maratón de Grey's", detalle: "Tú eliges la temporada. Yo pongo la cobija y los pañuelos, sin preguntar cuánto falta." },
+    { titulo: "Harry Potter o Marvel", detalle: "Tú escoges qué vemos. Yo consigo las papas bien saladas y el Tropical de melocotón." },
+    { titulo: "Dormir sin alarma", detalle: "Una mañana para dormir todo lo que quieras. Si hay algo pendiente, me encargo yo." },
+    { titulo: "Masaje sin apuro", detalle: "De pies y espalda, con calma. Tú me vas diciendo dónde." },
+    { titulo: "Antojo a cualquier hora", detalle: "Papas, Tropical o lo que pida el bebé. Sí, también si ya me había acostado." },
+    { titulo: "Desayuno en la cama", detalle: "Me dices qué quieres y yo te lo llevo. Tú te quedas un rato más acostadita." }
   ],
 
   carta: {
     saludo: "Mi Fiorella:",
     parrafos: [
-      "Llevo días pensando cómo hacer algo que estuviera a la altura de lo que siento por ti, y la verdad es que ninguna página alcanza. Pero quería intentarlo, porque te lo mereces todo.",
-      "Gracias por cada día que eliges quedarte a mi lado. Por las risas, por la paciencia, por los abrazos que llegan justo cuando los necesito y por todas esas veces que me haces sentir en casa sin estar en ningún lugar en particular.",
-      "Hace unos días cumplimos nuestro primer año juntos. Un año de dormirnos uno al lado del otro, de despertar juntos y de compartirlo casi todo, y todavía me sorprende lo rápido que se pasó y lo mucho que cambió todo. El año pasado tu cumpleaños llegó cuando apenas llevábamos diecisiete días. Este año llega con un año entero de nosotros, y eso me hace inmensamente feliz.",
-      "Y este año es distinto por algo más: ya no somos solo dos. Verte llevar a nuestro bebé me ha hecho quererte de una forma que no sabía que existía. Vas a ser una mamá increíble. De hecho, ya lo eres.",
-      "Hoy es tu día, y quiero decirte algo que a veces no digo en voz alta lo suficiente: eres lo mejor que me ha pasado. Me encanta la persona que eres, la forma en que ves el mundo y la forma en que me ves a mí.",
-      "Ojalá este nuevo año te traiga todo lo que sueñas. Y ojalá yo pueda estar ahí para verlo, para aplaudirte y para abrazarte en cada paso.",
-      "Feliz cumpleaños, mi amor. Hoy puedes pedirme lo que quieras, que prometo no decirte que no. Hoy, mañana y todos los días que vengan, te elijo a ti."
+      "Le di mil vueltas a cómo hacerte esto. Escribí y borré un montón de veces, porque todo me sonaba a tarjeta de farmacia. Al final decidí escribirte como te hablo, y ya.",
+      "El año pasado tu cumpleaños nos agarró con diecisiete días de novios y yo no tenía idea de qué regalarte. Ahora sé hasta cuánta sal le echas a las papas (demasiada). Llevamos un año durmiendo juntos, despertándonos juntos y haciendo casi todo juntos, y aun así me dan ganas de pasar más rato a la par tuya.",
+      "El otro día leí que el hierro de la sangre y el calcio de los huesos se formaron dentro de estrellas, hace miles de millones de años. Me quedé pensando en eso un buen rato. Algo de eso anduvo flotando por el espacio todo ese tiempo para terminar en tu risa. Y de todos los lugares y todos los siglos, nos tocó coincidir aquí. Qué dicha.",
+      "Ya vas por las 24 semanas y todavía me quedo pensando en que vamos a ser papás. Me da curiosidad pensar qué va a sacar tuyo y qué mío. Ojalá tu risa. Te veo con esa pancita y me sigues pareciendo preciosa, cada semana un poquito más. Nos va a tocar aprender un montón. Quiero hacer mi parte, y que sepas que puedes contar conmigo desde ahorita.",
+      "Hoy la Tierra terminó otra vuelta al sol desde que naciste. Son como 940 millones de kilómetros. Yo me subí a esta vuelta hace poquito, pero ya te aviso que pienso estar en todas las que vienen.",
+      "Hoy pide lo que quieras, que no te voy a decir que no (bueno, casi nada). Y si después te da sueño, dormimos. Feliz cumpleaños, mi amor. Te amo."
     ],
-    despedida: "Con todo mi corazón,"
+    despedida: "Tuyo,"
   },
 
   // Lo que dice cada estrella cuando ella la toca.
   susurros: [
-    "Pensé en ti hoy. Como todos los días.",
+    "Ven, te quiero cerquita.",
     "Eres mi persona.",
-    "Te quiero más que ayer y menos que mañana.",
+    "Hay estrellas cuya luz tarda siglos en llegar. Yo llegué hace un año y aquí me quedo.",
     "¿Después de todo este tiempo? Siempre.",
     "Todavía me pones nervioso.",
-    "Duerme todo lo que quieras. Yo cuido de los dos.",
+    "Duerme. Yo los cuido a los dos.",
     "Te amo 3000.",
-    "Si fueras una estrella, serías esta.",
-    "Vas a ser la mamá más bonita del mundo.",
-    "Te debo un beso. Cóbramelo ahora mismo.",
-    "Un año contigo, y todavía me sorprendes.",
-    "Gracias por existir.",
-    "El 17 de octubre es mi fecha favorita del calendario. Bueno, después de hoy.",
-    "Contigo hasta el silencio es bonito."
+    "Te debo un chineo.",
+    "Ya quiero conocer a nuestro bebé.",
+    "Ven por tu beso.",
+    "Un año y todavía me sorprendes.",
+    "Quédate un ratito más.",
+    "Desde aquel 17 de octubre.",
+    "Me gusta estar así contigo."
   ],
 
   final: {
     titulo: "Te amo, Fiorella",
-    texto: "Feliz cumpleaños. Por este año y por todos los que vienen, los tres juntos.",
+    texto: "Feliz cumpleaños, mi amor. Por esta vuelta al sol y por todas las que vienen, los tres juntos.",
     // Aparece cuando nace la estrellita del bebé dentro del corazón.
-    bebe: "Y muy pronto, una estrella más."
+    bebe: "Y ya viene una estrellita más."
   },
 
   // Aparece si toca la luna cinco veces.
-  secretoLuna: "Encontraste el secreto de la luna. Te debo un beso por cada vez que la tocaste."
+  secretoLuna: "Por tocar tanto la luna te ganaste cinco besos. Ven a cobrarlos."
 };
