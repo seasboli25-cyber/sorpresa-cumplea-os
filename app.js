@@ -759,6 +759,8 @@
     if (dif <= 21) return { modo: 'despues', fecha: este, dias: dif };
     return { modo: 'antes', fecha: new Date(hoy.getFullYear() + 1, diaCumple[0], diaCumple[1]) };
   }
+  // Lo que depende de la fecha se vuelve a pintar cuando cambia el día sin recargar.
+  const alCambiarDia = [];
   const plural = (n, uno, varios) => `${n.toLocaleString('es')} ${n === 1 ? uno : varios}`;
 
   (function fechasVisibles() {
@@ -910,14 +912,20 @@
           Musica.fanfarria();
           avisar(`¡Ya es tu cumpleaños, ${PARA}!`, 6000);
         }
-      } else if (c.modo === 'recuerdo') {
+      } else if (c.modo === 'recuerdo' || c.modo === 'despues') {
+        const manana = new Date(); manana.setHours(24, 0, 0, 30);
+        const t = setTimeout(() => montar(false), manana - Date.now());
+        parar = () => clearTimeout(t);
+      }
+      alCambiarDia.forEach((f) => f());
+      if (c.modo === 'antes' || c.modo === 'hoy') return;
+      if (c.modo === 'recuerdo') {
         $('#tiempo-ante').textContent = 'un recuerdo';
         $('#tiempo-titulo').textContent = `Tu cumpleaños de ${c.fecha.getFullYear()}`;
         intro.textContent = `Esta página la hice para el ${c.fecha.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })}.`;
         nota.textContent = 'Y todo lo que dice sigue siendo cierto.';
         cont.hidden = true;
         edad.hidden = true;
-        parar = null;
       } else {
         $('#tiempo-ante').textContent = 'un pequeño reloj';
         $('#tiempo-titulo').textContent = 'Todavía podemos celebrar';
@@ -925,7 +933,6 @@
         nota.textContent = 'Si quieres seguir celebrando, yo me apunto.';
         cont.hidden = true;
         edad.hidden = true;
-        parar = null;
       }
     }
     montar(false);
@@ -1361,6 +1368,7 @@
     $('#ecg-fondo').setAttribute('d', d);
     $('#ecg-luz').setAttribute('d', d);
 
+    function pintar() {
     // Después del cumpleaños se quedan las semanas que tenía ese día, como recuerdo.
     const ref = cumpleActual();
     const hoy = ref.modo === 'despues' || ref.modo === 'recuerdo' ? ref.fecha : medianoche(new Date());
@@ -1377,6 +1385,9 @@
       : faltan > 1
         ? `Faltan unas ${faltan} semanas para conocer a nuestro bebé.${cierre}`
         : `Ya casi conocemos a nuestro bebé.${cierre}`;
+    }
+    pintar();
+    alCambiarDia.push(pintar);
 
     const btn = $('#latido');
     if (!Musica.disponible()) { btn.hidden = true; return; }
