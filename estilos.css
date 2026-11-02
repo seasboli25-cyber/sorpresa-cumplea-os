@@ -1,42 +1,69 @@
-/* Una sola noche que se recorre bajando: cada sección es un objeto de papel
-   (sobre, tarjetas, polaroids, pastel, caja, carta) flotando en el mismo cielo. */
+/* Papel blanco, tinta violeta: el recorrido es claro y aireado, y dos momentos
+   en violeta profundo lo abren y lo cierran (el crepúsculo con la luna y el cielo
+   final). Cada sección sigue siendo un objeto de papel: sobre, tarjetas, polaroids,
+   pastel, caja, carta. Plan acordado con Codex el 2 de noviembre. */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --noche: #120d22;
-  --noche-2: #1f1838;
-  --noche-3: #2c2350;
-  --vela: #f5c46e;
-  --rubor: #f2998c;
-  --vino: #8c2b45;
-  --lavanda: #b8a9e0;
-  --menta: #9fd6c8;
-  --luz: #fff4e6;
-  --texto: #e9e0f5;
-  --tenue: #a99fc4;
-  --linea: rgba(184, 169, 224, 0.22);
-  --vidrio: rgba(255, 255, 255, 0.045);
+  /* Superficies y tinta */
+  --fondo: #fcfaff;
+  --fondo-2: #f4effc;
+  --tarjeta: #ffffff;
+  --violeta: #6d3fc0;
+  --violeta-hondo: #2e1a52;
+  --lila: #b9a3ea;
+  --lila-suave: #ece4fb;
+  --orquidea: #b85fa8;
+  --orquidea-texto: #9b438b;
+  --sombra: rgba(76, 40, 140, 0.12);
+  --sombra-fuerte: rgba(76, 40, 140, 0.22);
 
-  --papel: #fbf2e6;
-  --papel-rosa: #fbe1da;
-  --papel-lila: #ece4fb;
-  --polaroid: #fffaf3;
-  --tinta: #3b2748;
-  --tinta-suave: #6d5a7d;
+  /* Nombres heredados, ahora con su función en el tema claro.
+     Los paneles violetas los redefinen más abajo para fondo oscuro. */
+  --noche: var(--fondo);
+  --noche-2: var(--fondo-2);
+  --noche-3: #e6dcfa;
+  --vela: var(--violeta);
+  --rubor: var(--orquidea-texto);
+  --vino: #5a2e9e;
+  --lavanda: var(--lila);
+  --menta: #d9c8f7;
+  --luz: var(--violeta-hondo);
+  --texto: #2a1f3d;
+  --tenue: #6f6386;
+  --linea: rgba(109, 63, 192, 0.16);
+  --vidrio: rgba(255, 255, 255, 0.82);
 
-  --sobre: #f3c7bd;
-  --sobre-2: #e9b1a6;
-  --sobre-solapa: #efbcb1;
-  --sobre-in: #a86a6c;
+  --papel: #ffffff;
+  --papel-rosa: #fbf2fa;
+  --papel-lila: #f3eefd;
+  --polaroid: #ffffff;
+  --tinta: #2a1f3d;
+  --tinta-suave: #6f6386;
 
-  --crema: #fff3e3;
-  --pastel-1: #d9767c;
-  --pastel-2: #ef9f98;
-  --pastel-3: #f8cfc4;
+  --sobre: #f8f4ff;
+  --sobre-2: #ece3fc;
+  --sobre-solapa: #f2ebfe;
+  --sobre-in: #c9b6ef;
+
+  --crema: #ffffff;
+  --pastel-1: #8d5fd3;
+  --pastel-2: #b597ec;
+  --pastel-3: #e3d6fa;
 
   --f-display: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
   --f-mano: "Caveat", "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
-  --f-texto: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-texto: "DM Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Paneles violetas (portada, cielo final, última razón, lumos): tinta clara. */
+.portada, .constelacion, .tarjeta-final, .lumos {
+  --luz: #ffffff;
+  --texto: #efe8ff;
+  --tenue: #c9bcec;
+  --vela: #e4d4ff;
+  --rubor: #f1b9e6;
+  --linea: rgba(228, 212, 255, 0.28);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -1374,3 +1401,176 @@ html.js .papel .p { opacity: 0; filter: blur(4px); }
 .vale-wa:focus-visible { outline: 2px solid var(--vino); outline-offset: 2px; border-radius: 4px; }
 /* Codex, 2-nov: sin esto el navegador se queda el gesto de la pulsación larga. */
 .luna { touch-action: none; }
+
+
+/* ═════════════ Tema blanco y violeta: ajustes de piezas con color propio ═════════════ */
+
+/* Portada: crepúsculo violeta a todo el ancho, con estrellas y un borde curvo hacia el papel. */
+.portada { isolation: isolate; }
+.portada::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: -1;
+  width: 100vw;
+  transform: translateX(-50%);
+  border-radius: 0 0 50% 50% / 0 0 56px 56px;
+  background:
+    radial-gradient(1.6px 1.6px at 12% 18%, #fff 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 28% 42%, rgba(255,255,255,.8) 50%, transparent 51%),
+    radial-gradient(1.8px 1.8px at 44% 12%, #fff 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 63% 30%, rgba(255,255,255,.75) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 78% 52%, #fff 50%, transparent 51%),
+    radial-gradient(1.1px 1.1px at 90% 22%, rgba(255,255,255,.7) 50%, transparent 51%),
+    radial-gradient(1.3px 1.3px at 8% 66%, rgba(255,255,255,.7) 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 36% 78%, rgba(255,255,255,.6) 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 70% 74%, rgba(255,255,255,.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 54% 58%, rgba(255,255,255,.55) 50%, transparent 51%),
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(184,95,168,.35), transparent 70%),
+    linear-gradient(180deg, #170b33 0%, #2e1a52 45%, #5a33a3 100%);
+  box-shadow: 0 30px 60px -30px var(--sombra-fuerte);
+}
+.titulo-nombre { text-shadow: 0 0 34px rgba(228, 212, 255, .45); }
+@keyframes brillo {
+  0%, 70%, 100% { color: var(--vela); text-shadow: 0 0 34px rgba(228, 212, 255, .45); }
+  80% { color: #ffffff; text-shadow: 0 0 26px rgba(255, 255, 255, .9), 0 0 60px rgba(241, 185, 230, .6); }
+}
+.luna { box-shadow: 0 0 40px 10px rgba(236, 226, 255, .28), 0 0 130px 40px rgba(228, 212, 255, .14); }
+
+/* Sobre: papel blanco y lila, lacre violeta. */
+.pantalla-sobre { background: radial-gradient(ellipse 70% 55% at 50% 48%, rgba(185, 163, 234, .38), transparent 70%); }
+.sobre { filter: drop-shadow(0 24px 40px rgba(76, 40, 140, .22)); }
+.sello {
+  background: radial-gradient(circle at 38% 34%, #8f62dc, #5a2e9e 60%, #3a1b6e);
+  color: #ffffff;
+}
+.matasellos { border-color: rgba(90, 46, 158, .5); box-shadow: inset 0 0 0 4px transparent, inset 0 0 0 5.5px rgba(90, 46, 158, .3); color: rgba(90, 46, 158, .7); }
+.matasellos::before { background: repeating-linear-gradient(to bottom, rgba(90, 46, 158, .32) 0 2px, transparent 2px 7.5px); }
+@keyframes abre-ya { 0% { filter: drop-shadow(0 24px 40px rgba(76, 40, 140, .22)); } 40% { filter: drop-shadow(0 0 40px rgba(109, 63, 192, .55)); } 100% { filter: drop-shadow(0 24px 40px rgba(76, 40, 140, .22)); } }
+
+/* Botones: violeta con texto blanco; el suave es blanco con borde lila. */
+.boton { background: linear-gradient(135deg, #7b4bd6, #9b438b); color: #ffffff; box-shadow: 0 10px 28px rgba(109, 63, 192, .28); }
+.boton:hover { box-shadow: 0 14px 34px rgba(109, 63, 192, .36); }
+.boton:focus-visible { outline-color: var(--violeta); }
+.boton-suave { background: #ffffff; color: var(--violeta); border: 1px solid rgba(109, 63, 192, .28); box-shadow: 0 6px 18px var(--sombra); }
+.boton-suave:hover { background: var(--fondo-2); box-shadow: 0 8px 22px var(--sombra); }
+
+/* Tarjetas claras: blanco con sombra violeta suave en vez de vidrio oscuro. */
+.unidad, .cifra, .hito-tarjeta {
+  background: var(--tarjeta);
+  border-color: var(--linea);
+  box-shadow: 0 10px 28px var(--sombra);
+}
+.linea::after { box-shadow: 0 0 12px rgba(109, 63, 192, .35); }
+.hito-punto { background: var(--tarjeta); border-color: var(--lila); }
+.hito.visible .hito-punto { box-shadow: 0 0 0 6px rgba(109, 63, 192, .12), 0 0 18px rgba(109, 63, 192, .35); }
+.hito.destacado .hito-tarjeta {
+  border-color: rgba(155, 67, 139, .35);
+  background: linear-gradient(150deg, #fbf2fa, #f1eafd);
+  box-shadow: 0 14px 36px rgba(155, 67, 139, .16);
+}
+.hito.abierto-futuro .hito-tarjeta { background: transparent; box-shadow: none; }
+
+/* Razones */
+.tarjeta { box-shadow: 0 22px 44px rgba(76, 40, 140, .16), 0 2px 6px rgba(76, 40, 140, .06); }
+.tarjeta-final { background: linear-gradient(160deg, #5a33a3, #2e1a52); color: var(--luz); }
+
+/* Polaroids */
+.cara, .dorso { box-shadow: 0 18px 34px rgba(76, 40, 140, .16), 0 2px 6px rgba(76, 40, 140, .06); }
+.pola::before { background: rgba(185, 163, 234, .45); }
+.dorso { background-image: repeating-linear-gradient(to bottom, transparent 0 25px, rgba(109, 63, 192, .12) 25px 26px); }
+
+/* Pastel: pisos lilas y violetas, merengue blanco, velas lilas. */
+.deseo-luz { background: radial-gradient(circle, rgba(255, 196, 120, .22), rgba(185, 163, 234, .16) 34%, transparent 64%); }
+.piso { box-shadow: inset 0 -9px 0 rgba(46, 26, 82, .1), inset 6px 0 0 rgba(255, 255, 255, .18); }
+.piso::before { filter: drop-shadow(0 2px 1px rgba(76, 40, 140, .12)); }
+.vela { background: repeating-linear-gradient(135deg, #ffffff 0 5px, #b9a3ea 5px 10px); box-shadow: inset -2px 0 0 rgba(46, 26, 82, .12), 0 0 0 1px rgba(109, 63, 192, .18); }
+.plato { background: linear-gradient(#ffffff, #e6dcfa); box-shadow: 0 14px 30px rgba(76, 40, 140, .2), 0 0 0 1px rgba(109, 63, 192, .12); }
+
+/* Regalo: caja violeta con cinta blanca. */
+.caja { filter: drop-shadow(0 22px 30px rgba(76, 40, 140, .28)); }
+.caja-base {
+  background:
+    linear-gradient(90deg, transparent calc(50% - 15px), #f4eeff calc(50% - 15px) calc(50% + 15px), transparent calc(50% + 15px)),
+    linear-gradient(165deg, #7b4bd6, #4b2790);
+}
+.caja-tapa {
+  background:
+    linear-gradient(90deg, transparent calc(50% - 15px), #ffffff calc(50% - 15px) calc(50% + 15px), transparent calc(50% + 15px)),
+    linear-gradient(165deg, #9265e0, #5e34ad);
+}
+.lazo::before, .lazo::after { border-color: #e9dffd; filter: drop-shadow(0 2px 2px rgba(46, 26, 82, .25)); }
+.rayos { background: repeating-conic-gradient(from 0deg, rgba(109, 63, 192, .14) 0 7deg, transparent 7deg 20deg); }
+
+/* Vales */
+.vale { box-shadow: 0 10px 26px var(--sombra); }
+.vale-txt { border-right-color: rgba(109, 63, 192, .22); }
+.vale-btn { background: var(--violeta); color: #ffffff; }
+
+/* Carta: papel blanco con renglones lilas y margen orquídea. */
+.papel {
+  background-image:
+    linear-gradient(90deg, transparent var(--margen), rgba(184, 95, 168, .32) var(--margen) calc(var(--margen) + 2px), transparent calc(var(--margen) + 2px)),
+    repeating-linear-gradient(to bottom, transparent 0 calc(var(--rl) - 1px), rgba(109, 63, 192, .14) calc(var(--rl) - 1px) var(--rl));
+  box-shadow: 0 30px 60px rgba(76, 40, 140, .16), 0 2px 8px rgba(76, 40, 140, .06);
+}
+.papel::before, .papel::after { background: rgba(185, 163, 234, .45); }
+
+/* Bebé: tarjeta lila con monitor violeta. */
+.bebe-tarjeta {
+  border-color: rgba(155, 67, 139, .22);
+  background: radial-gradient(ellipse at 50% 0%, rgba(184, 95, 168, .12), transparent 70%), linear-gradient(180deg, #ffffff, #f6f1fe);
+  box-shadow: 0 18px 44px var(--sombra);
+}
+.monitor {
+  background:
+    linear-gradient(rgba(109, 63, 192, .08) 1px, transparent 1px) 0 0 / 100% 18px,
+    linear-gradient(90deg, rgba(109, 63, 192, .08) 1px, transparent 1px) 0 0 / 24px 100%,
+    #fbf9ff;
+  box-shadow: inset 0 0 0 1px var(--linea);
+}
+.ecg-fondo { stroke: rgba(109, 63, 192, .16); }
+.ecg-luz { stroke: var(--orquidea); filter: drop-shadow(0 0 4px rgba(184, 95, 168, .6)); }
+.bebe.latiendo .ecg-luz { stroke: var(--violeta); filter: drop-shadow(0 0 6px rgba(109, 63, 192, .6)); }
+
+/* Cielo final: panel violeta opaco para que estrellas y texto se lean. */
+.constelacion {
+  border-color: rgba(109, 63, 192, .3);
+  background: radial-gradient(ellipse at 50% 60%, #4b2a86, #241143 72%, #170b33);
+  box-shadow: 0 24px 60px var(--sombra-fuerte);
+}
+.final-titulo { text-shadow: 0 0 30px rgba(241, 185, 230, .5), 0 0 80px rgba(185, 163, 234, .35); }
+.susurro { box-shadow: 0 10px 30px rgba(23, 11, 51, .35); }
+
+/* Música y avisos */
+.musica { background: rgba(255, 255, 255, .88); border-color: rgba(109, 63, 192, .22); box-shadow: 0 8px 22px var(--sombra); }
+.barras i { background: var(--lila); }
+.musica[aria-pressed="true"] .barras i { background: var(--violeta); }
+.aviso { border: 1px solid var(--linea); box-shadow: 0 16px 40px var(--sombra-fuerte); }
+
+/* Lumos: sigue siendo oscuridad, ahora violeta casi negro con luz lila. */
+.lumos { background: #0d0820; }
+.lumos-mensaje { text-shadow: 0 0 18px rgba(228, 212, 255, .55); }
+.lumos-sombra {
+  background:
+    radial-gradient(circle at var(--x) var(--y), rgba(236, 226, 255, .16), rgba(236, 226, 255, 0) calc(var(--r) * 1.3)),
+    radial-gradient(circle at var(--x) var(--y), rgba(13, 8, 32, 0) 0, rgba(13, 8, 32, 0) calc(var(--r) * .55), rgba(13, 8, 32, .975) var(--r));
+}
+.lumos-nox { background: rgba(46, 26, 82, .7); }
+
+/* Cinco cifras: en pantallas anchas van en una sola fila. */
+@media (min-width: 760px) {
+  .cifras { grid-template-columns: repeat(5, minmax(0, 1fr)); width: min(100%, 960px); }
+  .cifra b { font-size: 2.4rem; white-space: nowrap; }
+}
+
+/* Luna perlada, fría, a juego con el violeta. */
+.luna {
+  background:
+    radial-gradient(circle at 64% 30%, rgba(170, 150, 200, .38) 0 7%, transparent 8%),
+    radial-gradient(circle at 34% 62%, rgba(170, 150, 200, .32) 0 10%, transparent 11%),
+    radial-gradient(circle at 60% 72%, rgba(170, 150, 200, .26) 0 5%, transparent 6%),
+    radial-gradient(circle at 36% 34%, #ffffff, #f1ebfb 55%, #d5c8ee);
+}

@@ -11,7 +11,9 @@
   const azar = (a, b) => a + Math.random() * (b - a);
   const elegir = (arr) => arr[Math.floor(Math.random() * arr.length)];
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const COLORES = ['#f5c46e', '#f2998c', '#b8a9e0', '#fff4e6', '#ff7a90', '#9fd6c8'];
+  // Tema blanco y violeta: sin blanco puro, que desaparece sobre el papel.
+  const COLORES = ['#6d3fc0', '#9b6be0', '#b9a3ea', '#d9c8f7', '#b85fa8', '#e7a6d8'];
+  const CORAZONES = ['#6d3fc0', '#9b6be0', '#b85fa8', '#b9a3ea', '#e7a6d8'];
   const CORAZON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.9 4.5 6.6 4.5c2.2 0 3.6 1.2 5.4 3.2 1.8-2 3.2-3.2 5.4-3.2 3.7 0 5.7 3.9 4.2 7.3C19.5 16.4 12 21 12 21z"/></svg>';
 
   const guardado = {
@@ -333,7 +335,7 @@
           vx = Math.cos(a) * v;
           vy = Math.sin(a) * v;
         }
-        en.push({ tipo: 'chispa', x, y, vx, vy, g: 0.045, roce: 0.97, vida: 1, ritmo: azar(0.011, 0.018), r: azar(1.4, 2.6), color: Math.random() < 0.25 ? '#fff4e6' : color, giro: 0, vgiro: 0 });
+        en.push({ tipo: 'chispa', x, y, vx, vy, g: 0.045, roce: 0.97, vida: 1, ritmo: azar(0.011, 0.018), r: azar(1.4, 2.6), color: Math.random() < 0.25 ? '#d9c8f7' : color, giro: 0, vgiro: 0 });
       }
     }
 
@@ -375,7 +377,6 @@
         corazon(0, -p.s / 2, p.s);
         cx.restore();
       } else if (p.tipo === 'chispa' || p.tipo === 'cohete') {
-        cx.globalCompositeOperation = 'lighter';
         cx.strokeStyle = p.color;
         cx.lineWidth = p.r;
         cx.lineCap = 'round';
@@ -383,7 +384,6 @@
         cx.moveTo(p.x - p.vx * 3, p.y - p.vy * 3);
         cx.lineTo(p.x, p.y);
         cx.stroke();
-        cx.globalCompositeOperation = 'source-over';
       }
       cx.globalAlpha = 1;
     }
@@ -406,13 +406,13 @@
       corazones(x, y, n = 12) {
         n = Math.max(2, Math.round(n * escala));
         for (let i = 0; i < n; i++) {
-          agregar({ tipo: 'corazon', x: x + azar(-10, 10), y: y + azar(-6, 6), vx: azar(-2.6, 2.6), vy: azar(-4.6, -1.4), g: -0.015, roce: 0.975, ritmo: azar(0.009, 0.016), s: azar(10, 22), giro: azar(0, 6), vgiro: azar(0.04, 0.09), color: elegir(['#f2998c', '#ff7a90', '#f5c46e', '#fbe1da']) });
+          agregar({ tipo: 'corazon', x: x + azar(-10, 10), y: y + azar(-6, 6), vx: azar(-2.6, 2.6), vy: azar(-4.6, -1.4), g: -0.015, roce: 0.975, ritmo: azar(0.009, 0.016), s: azar(10, 22), giro: azar(0, 6), vgiro: azar(0.04, 0.09), color: elegir(CORAZONES) });
         }
       },
       lluviaCorazones(n = 50) {
         n = Math.round(n * escala);
         for (let i = 0; i < n; i++) {
-          agregar({ tipo: 'corazon', x: azar(0, W), y: H + azar(10, H * 0.5), vx: azar(-0.6, 0.6), vy: azar(-3.4, -1.4), g: -0.004, roce: 0.999, ritmo: azar(0.003, 0.006), s: azar(12, 28), giro: azar(0, 6), vgiro: azar(0.02, 0.05), color: elegir(['#f2998c', '#ff7a90', '#f5c46e', '#fbe1da', '#b8a9e0']) });
+          agregar({ tipo: 'corazon', x: azar(0, W), y: H + azar(10, H * 0.5), vx: azar(-0.6, 0.6), vy: azar(-3.4, -1.4), g: -0.004, roce: 0.999, ritmo: azar(0.003, 0.006), s: azar(12, 28), giro: azar(0, 6), vgiro: azar(0.02, 0.05), color: elegir(CORAZONES) });
         }
       },
       fuegos(n = 5) {
@@ -427,6 +427,9 @@
   })();
 
   /* ───────────── El cielo de fondo ───────────── */
+  // En el tema claro el fondo es papel: sin estrellas ni estrellas fugaces.
+  const CIELO_CON_ESTRELLAS = false;
+
   (function cielo() {
     const cv = $('#cielo');
     const cx = cv.getContext('2d');
@@ -455,12 +458,12 @@
       });
       motas = Array.from({ length: 12 }, () => ({ x: Math.random() * W, y: Math.random() * H, r: azar(30, 90), vy: azar(-0.25, -0.08), a: azar(0.025, 0.06) }));
       fondo = cx.createLinearGradient(0, 0, 0, H);
-      fondo.addColorStop(0, '#0c0919');
-      fondo.addColorStop(0.55, '#171130');
-      fondo.addColorStop(1, '#241838');
+      fondo.addColorStop(0, '#fdfbff');
+      fondo.addColorStop(0.55, '#f8f4fe');
+      fondo.addColorStop(1, '#f1eafc');
       horizonte = cx.createRadialGradient(W / 2, H * 1.15, 0, W / 2, H * 1.15, Math.max(W, H) * 0.8);
-      horizonte.addColorStop(0, 'rgba(242,153,140,0.16)');
-      horizonte.addColorStop(1, 'rgba(242,153,140,0)');
+      horizonte.addColorStop(0, 'rgba(184,95,168,0.10)');
+      horizonte.addColorStop(1, 'rgba(184,95,168,0)');
       if (reducido) cuadro(0);
     }
 
@@ -473,15 +476,15 @@
       for (const m of motas) {
         if (!reducido) { m.y += m.vy; if (m.y < -m.r) { m.y = H + m.r; m.x = Math.random() * W; } }
         const g = cx.createRadialGradient(m.x, m.y, 0, m.x, m.y, m.r);
-        g.addColorStop(0, `rgba(245,196,110,${m.a})`);
-        g.addColorStop(1, 'rgba(245,196,110,0)');
+        g.addColorStop(0, `rgba(109,63,192,${m.a})`);
+        g.addColorStop(1, 'rgba(109,63,192,0)');
         cx.fillStyle = g;
         cx.fillRect(m.x - m.r, m.y - m.r, m.r * 2, m.r * 2);
       }
 
       const sy = window.scrollY || 0;
       const t = ts / 1000;
-      for (const s of estrellas) {
+      for (const s of (CIELO_CON_ESTRELLAS ? estrellas : [])) {
         const y = (((s.y - sy * s.z * 0.12) % H) + H) % H;
         const a = Math.max(0, s.base + Math.sin(t * s.vel + s.fase) * 0.35 * s.base);
         cx.fillStyle = `rgba(${s.tono},${a})`;
@@ -499,7 +502,7 @@
       }
 
       if (!reducido) {
-        if (!fugaz && ts > proxFugaz) {
+        if (CIELO_CON_ESTRELLAS && !fugaz && ts > proxFugaz) {
           const dir = Math.random() < 0.5 ? -1 : 1;
           fugaz = { x: dir < 0 ? azar(W * 0.4, W) : azar(0, W * 0.6), y: azar(0, H * 0.35), vx: dir * azar(7, 11), vy: azar(2.4, 4), vida: 1 };
         }
@@ -1089,7 +1092,7 @@
       tres: svg(`<path pathLength="1" transform="translate(33 40) scale(1.15)" d="${CORA}"/>` + `<path pathLength="1" transform="translate(67 40) scale(1.15)" d="${CORA}"/>` + `<path pathLength="1" transform="translate(50 74) scale(.62)" d="${CORA}"/>` + lleno(50, 76, 0.42)),
       musica: svg(`<ellipse pathLength="1" cx="34" cy="72" rx="9" ry="7"/>` + P('M43 72V28L78 20V62') + `<ellipse pathLength="1" cx="69" cy="62" rx="9" ry="7"/>` + P('M43 38L78 30') + P('M10 46q6-8 12 0t12 0') + lleno(20, 24, 0.6))
     };
-    const TONOS = ['#fbe6c4', '#d9efe9', '#e6def8', '#f7d9cf', '#f4d4e0', '#dfe6f7'];
+    const TONOS = ['#f1eafd', '#f8eef7', '#e9e0fb', '#f4ecfb', '#efe4f7', '#e8e4fb'];
     const GIROS = [-5, 4, -3, 6, -6, 3];
     const ALTURAS = [0, 18, 6, 22, 4, 14];
     const tablero = $('#tablero');
@@ -1449,9 +1452,9 @@
       });
       if (lineas > 0) {
         const hasta = lineas * N;
-        cx.strokeStyle = 'rgba(245,196,110,0.65)';
+        cx.strokeStyle = 'rgba(228,212,255,0.75)';
         cx.lineWidth = 1.3;
-        cx.shadowColor = 'rgba(245,196,110,0.8)';
+        cx.shadowColor = 'rgba(228,212,255,0.9)';
         cx.shadowBlur = 8;
         cx.beginPath();
         cx.moveTo(estrellas[0].x, estrellas[0].y);
@@ -1491,13 +1494,13 @@
         const brillo = 0.75 + Math.sin(t * 1.6 + p.fase) * 0.25;
         const r = p.r * (1 + p.pulso);
         const g = cx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r * 7);
-        g.addColorStop(0, `rgba(255,236,200,${0.5 * brillo})`);
-        g.addColorStop(1, 'rgba(255,236,200,0)');
+        g.addColorStop(0, `rgba(228,212,255,${0.5 * brillo})`);
+        g.addColorStop(1, 'rgba(228,212,255,0)');
         cx.fillStyle = g;
         cx.beginPath();
         cx.arc(p.x, p.y, r * 7, 0, Math.PI * 2);
         cx.fill();
-        cx.fillStyle = `rgba(255,248,236,${brillo})`;
+        cx.fillStyle = `rgba(255,255,255,${brillo})`;
         cx.beginPath();
         cx.arc(p.x, p.y, r, 0, Math.PI * 2);
         cx.fill();
