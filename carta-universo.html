@@ -180,9 +180,25 @@ body {
 .imprimir:hover { background: rgba(243, 230, 200, .16); }
 .imprimir:focus-visible { outline: 2px solid var(--papel-claro); outline-offset: 3px; }
 
+/* En pantalla la hoja crece y la letra es más grande, oscura y gruesa para leerse
+   bien en la computadora; la impresión conserva el tamaño carta de abajo. */
+@media screen {
+  .hoja { width: min(1000px, 100%); padding: 80px 90px 70px; --tamano: 25px; }
+  .texto p, .despedida, .posdata {
+    color: #24140a;
+    -webkit-text-stroke: .35px currentColor;
+    line-height: 1.62;
+  }
+  .texto q { font-size: .82em; -webkit-text-stroke: 0; }
+  .posdata { font-size: calc(var(--tamano) * .92); }
+  .fecha { font-size: 36px; }
+  .saludo { font-size: 54px; }
+  .firma { font-size: 68px; }
+}
+
 @media screen and (max-width: 860px) {
   body { padding-top: 20px; }
-  .hoja { min-height: 0; padding: 48px 26px 44px; --tamano: 17px; }
+  .hoja { min-height: 0; padding: 48px 24px 44px; --tamano: 21px; }
   .lacre { top: 22px; left: 20px; }
   .fecha { padding-right: 40px; font-size: 24px; }
   .saludo { font-size: 36px; }
