@@ -1574,3 +1574,7 @@ html.js .papel .p { opacity: 0; filter: blur(4px); }
     radial-gradient(circle at 60% 72%, rgba(170, 150, 200, .26) 0 5%, transparent 6%),
     radial-gradient(circle at 36% 34%, #ffffff, #f1ebfb 55%, #d5c8ee);
 }
+
+/* Codex, 2-nov: la estrellita del bebé en violeta con halo lila, y "lumos" algo más visible. */
+.final-bebe::before { background: var(--violeta); box-shadow: 0 0 0 3px rgba(185, 163, 234, .45), 0 0 14px 4px rgba(185, 163, 234, .7); }
+.lumos-boton { opacity: .7; }
