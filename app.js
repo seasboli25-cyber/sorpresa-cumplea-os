@@ -626,11 +626,10 @@
       capa.classList.remove('hallado', 'cerrando');
       guia.textContent = 'Mueve la luz para encontrarlo';
       const W = window.innerWidth, H = window.innerHeight;
-      // El mensaje mide hasta 300 px: se mantiene entero dentro de la pantalla.
-      const medio = Math.min(300, W * 0.78) / 2 + 16;
-      msj.style.left = Math.round(Math.max(medio, Math.min(W - medio, W * azar(0.3, 0.7)))) + 'px';
+      msj.style.left = Math.round(W * azar(0.3, 0.7)) + 'px';
       msj.style.top = Math.round(Math.max(110, H * azar(0.22, 0.5))) + 'px';
       capa.hidden = false;
+      encajar();
       if (puntero != null) {
         try { $('#luna').releasePointerCapture(puntero); } catch (e) { /* ya liberado */ }
         try { capa.setPointerCapture(puntero); } catch (e) { /* el dedo ya se levantó */ }
@@ -650,6 +649,18 @@
       Musica.tintineo();
       setTimeout(Musica.tintineo, 140);
     }
+
+    // El mensaje queda entero dentro de la pantalla, también al girar el teléfono.
+    function encajar() {
+      if (capa.hidden) return;
+      const W = window.innerWidth, H = window.innerHeight;
+      const r = msj.getBoundingClientRect();
+      const x = parseFloat(msj.style.left) || W / 2, y = parseFloat(msj.style.top) || H / 3;
+      const mx = r.width / 2 + 16, my = r.height / 2 + 16;
+      msj.style.left = Math.round(Math.max(mx, Math.min(W - mx, x))) + 'px';
+      msj.style.top = Math.round(Math.max(my + 60, Math.min(H - my - 70, y))) + 'px';
+    }
+    window.addEventListener('resize', encajar);
 
     function cerrar() {
       capa.classList.add('cerrando');
@@ -1461,7 +1472,7 @@
         const k = Math.min(1, (ts - nacimiento) / 1600);
         const [, punta] = puntoCorazon(N / 2, latido);
         const bx = W / 2, by = H / 2 + (punta - H / 2) * 0.68;
-        const pulso = reducido ? 0 : Math.pow(Math.max(0, Math.sin((ts / 1000) * Math.PI * (140 / 60))), 8);
+        const pulso = reducido ? 0 : Math.pow(Math.max(0, Math.sin((ts / 1000) * 2 * Math.PI * (140 / 60))), 8);
         const r = 2.4 * suave(k) * (1 + pulso * 0.35);
         const g = cx.createRadialGradient(bx, by, 0, bx, by, r * 9);
         g.addColorStop(0, `rgba(242,153,140,${0.6 * k})`);
