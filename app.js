@@ -616,7 +616,7 @@
         hallado = true;
         setTimeout(() => {
           capa.classList.add('hallado');
-          guia.textContent = datos.hallado || 'Travesura realizada.';
+          guia.textContent = datos.hallado || 'Lo encontraste.';
           FX.corazones(cx, cy, 12);
           Musica.fanfarria();
         }, 900);
@@ -1090,6 +1090,7 @@
       papas: svg(P('M28 46L35 86H65L72 46Z') + P('M35 46L31 16') + P('M42 46L41 11') + P('M50 46L51 9') + P('M58 46L60 13') + P('M65 46L69 19') + P('M24 46H76') + P('M82 22l2 2M88 30l2 2M80 36l2 2') + lleno(50, 68, 0.75)),
       tele: svg(P('M16 30H84A6 6 0 0 1 90 36V70A6 6 0 0 1 84 76H16A6 6 0 0 1 10 70V36A6 6 0 0 1 16 30Z') + P('M38 16L50 30L62 16') + P('M50 76V86M36 86H64') + P('M20 40l4 4M76 62l4 4') + lleno(50, 55, 0.95)),
       tres: svg(`<path pathLength="1" transform="translate(33 40) scale(1.15)" d="${CORA}"/>` + `<path pathLength="1" transform="translate(67 40) scale(1.15)" d="${CORA}"/>` + `<path pathLength="1" transform="translate(50 74) scale(.62)" d="${CORA}"/>` + lleno(50, 76, 0.42)),
+      palomitas: svg(P('M30 42L36 88H64L70 42Z') + P('M41 42L43 88M50 42V88M59 42L57 88') + P('M28 42C24 34 30 26 37 30C38 20 50 18 52 27C57 19 70 23 67 32C74 31 76 40 72 42') + P('M40 32a3 3 0 1 1 0 .1M58 30a3 3 0 1 1 0 .1') + P('M80 26l2 2M86 34l2 2') + lleno(50, 68, 0.6)),
       musica: svg(`<ellipse pathLength="1" cx="34" cy="72" rx="9" ry="7"/>` + P('M43 72V28L78 20V62') + `<ellipse pathLength="1" cx="69" cy="62" rx="9" ry="7"/>` + P('M43 38L78 30') + P('M10 46q6-8 12 0t12 0') + lleno(20, 24, 0.6))
     };
     const TONOS = ['#f1eafd', '#f8eef7', '#e9e0fb', '#f4ecfb', '#efe4f7', '#e8e4fb'];
@@ -1606,10 +1607,7 @@
   window.addEventListener('keydown', (e) => {
     if (!abierto || e.key.length !== 1) return;
     tecleado = (tecleado + e.key.toLowerCase()).slice(-8);
-    if (tecleado.endsWith('lumos')) {
-      tecleado = '';
-      Lumos.abrir(null);
-    } else if (tecleado.endsWith('teamo')) {
+    if (tecleado.endsWith('teamo')) {
       tecleado = '';
       FX.lluviaCorazones(70);
       Musica.fanfarria();

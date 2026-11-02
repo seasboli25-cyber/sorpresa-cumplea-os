@@ -18,7 +18,7 @@ Página de cumpleaños hecha por Josimar para Fiorella, para el 3 de noviembre d
 
 **Antes de su día** el sobre está cerrado con candado hasta las 00:00 del 3 de noviembre (hora de Costa Rica). Para verla antes, agrega `#vista` al final del link.
 
-Escondidos: mantener el dedo sobre la luna, escribir «lumos» o tocar «lumos» al final enciende una varita que busca un mensaje en la oscuridad. Tocar dos veces en cualquier parte suelta corazones, y escribir «teamo» en el teclado hace llover corazones.
+Escondidos: mantener el dedo sobre la luna o tocar «enciende una luz» al final apaga la pantalla, y con el dedo se busca un mensaje en la oscuridad. Tocar dos veces en cualquier parte suelta corazones, y escribir «teamo» en el teclado hace llover corazones.
 
 ## Cómo personalizarla
 

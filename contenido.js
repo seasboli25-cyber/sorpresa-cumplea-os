@@ -32,7 +32,7 @@ window.CONTENIDO = {
     { fecha: "2026-02-14", titulo: "Nuestro primer San Valentín", texto: "El primero de los nuestros. Quiero muchos más contigo.", foto: null },
     { fecha: null, cuando: "este año", titulo: "Vamos a ser papás", texto: "Este año supimos que venía nuestro bebé. Todavía me emociona escribir eso.", foto: null },
     { fecha: "2026-10-17", titulo: "Un año juntos", texto: "Entre dormir juntos y compartir casi todo, a mí se me pasó rapidísimo.", foto: null },
-    { fecha: "2026-11-03", titulo: "Hoy te celebro", texto: "Tu segundo cumpleaños conmigo, esta vez esperando a nuestro bebé. Hoy te toca que te chineen.", foto: null, destacado: true },
+    { fecha: "2026-11-03", titulo: "Hoy te celebro", texto: "Tu segundo cumpleaños conmigo, esta vez esperando a nuestro bebé. Hoy me toca chinearte todavía más.", foto: null, destacado: true },
     { fecha: null, titulo: "Lo que viene", texto: "Conocer a nuestro bebé y aprender juntos a ser papás. Lo demás, contigo.", foto: null }
   ],
 
@@ -54,17 +54,17 @@ window.CONTENIDO = {
   // "50688887777"). Con él, al canjear un vale le abre WhatsApp con el mensaje listo.
   whatsapp: "50670855300",
 
-  // El secreto de "lumos": aparece en la oscuridad y se busca con la luz.
+  // El secreto de la luz: un mensaje escondido en la oscuridad que se busca con el dedo.
   lumos: {
-    mensaje: "Juro solemnemente que mis intenciones contigo son todas buenas.",
-    hallado: "Travesura realizada."
+    mensaje: "Te escondí esto aquí, a oscuras, para que lo encontraras tú. Te amo.",
+    hallado: "Lo encontraste."
   },
 
   // Cuántas velas lleva el pastel (de 1 a 12).
   velas: 5,
 
   razones: [
-    "Tu risa, sobre todo cuando intentas aguantarla y no puedes.",
+    "Tu risa. Ojalá me toque escucharla toda la vida.",
     "Despertarme y encontrarte a la par mía.",
     "Cómo me miras cuando crees que no me doy cuenta. Sí me doy cuenta.",
     "Tus caprichos. Me quejo, pero me encanta cumplirlos.",
@@ -75,7 +75,7 @@ window.CONTENIDO = {
     "Que casi nunca tenemos que llamarnos porque ya estamos juntos.",
     "Que le echas sal a todo. Hasta a lo que ya trae sal.",
     "Que ya veo un Tropical de melocotón y pienso en ti.",
-    "Que me metiste a Hogwarts, al Grey Sloan y a los Vengadores. Ya no hay vuelta atrás.",
+    "Una película, unas palomitas y tú a la par mía. No necesito más plan.",
     "Poder estar contigo en silencio, sin tener que llenar el rato hablando.",
     "Verte con esa pancita. Cada semana me pareces más bonita.",
     "Imaginarte con nuestro bebé en brazos. Ya quiero que llegue ese día.",
@@ -83,7 +83,7 @@ window.CONTENIDO = {
   ],
   razonFinal: "Me faltaron cosas. Ven y te digo las demás.",
 
-  // dibujo: estrella, papas, luna, tele, tres, casa, tazas, corazones, musica
+  // dibujo: estrella, papas, luna, palomitas, tres, casa, tele, tazas, corazones, musica
   recuerdos: [
     {
       dibujo: "estrella",
@@ -104,10 +104,10 @@ window.CONTENIDO = {
       detras: "Tú durmiendo tranquila y yo sin ninguna gana de levantarme."
     },
     {
-      dibujo: "tele",
+      dibujo: "palomitas",
       foto: null,
-      titulo: "¿Qué vemos hoy?",
-      detras: "Grey's, Harry Potter o Marvel. Tú escoges y yo me acomodo pegadito a ti."
+      titulo: "Noche de película",
+      detras: "Palomitas, una película y tú pegadita a mí. Ese es mi plan favorito."
     },
     {
       dibujo: "tres",
@@ -126,8 +126,8 @@ window.CONTENIDO = {
   vales: [
     { titulo: "Chineo ilimitado", detalle: "Una tarde entera de mimos, sin estar viendo la hora. Tú me dices qué se te antoja." },
     { titulo: "Un sí", detalle: "A lo que sea, sin peros y sin poner cara. Ya sé que este te va a gustar." },
-    { titulo: "Maratón de Grey's", detalle: "Tú eliges la temporada. Yo pongo la cobija y los pañuelos, sin preguntar cuánto falta." },
-    { titulo: "Harry Potter o Marvel", detalle: "Tú escoges qué vemos. Yo consigo las papas bien saladas y el Tropical de melocotón." },
+    { titulo: "Noche de película", detalle: "Tú escoges la película y yo hago las palomitas. Después nos acomodamos bien juntitos." },
+    { titulo: "McDonald's hasta la cama", detalle: "Pides lo que quieras y te lo llevo hasta la cama. Sin salir de las cobijas." },
     { titulo: "Dormir sin alarma", detalle: "Una mañana para dormir todo lo que quieras. Si hay algo pendiente, me encargo yo." },
     { titulo: "Masaje sin apuro", detalle: "De pies y espalda, con calma. Tú me vas diciendo dónde." },
     { titulo: "Antojo a cualquier hora", detalle: "Papas, Tropical o lo que pida el bebé. Sí, también si ya me había acostado." },
@@ -138,9 +138,9 @@ window.CONTENIDO = {
     saludo: "Mi Fiorella:",
     parrafos: [
       "Le di mil vueltas a cómo hacerte esto. Escribí y borré un montón de veces, porque todo me sonaba a tarjeta de farmacia. Al final decidí escribirte como te hablo, y ya.",
-      "El año pasado tu cumpleaños nos agarró con diecisiete días de novios y yo no tenía idea de qué regalarte. Ahora sé hasta cuánta sal le echas a las papas (demasiada). Llevamos un año durmiendo juntos, despertándonos juntos y haciendo casi todo juntos, y aun así me dan ganas de pasar más rato a la par tuya.",
-      "El otro día leí que el hierro de la sangre y el calcio de los huesos se formaron dentro de estrellas, hace miles de millones de años. Me quedé pensando en eso un buen rato. Algo de eso anduvo flotando por el espacio todo ese tiempo para terminar en tu risa. Y de todos los lugares y todos los siglos, nos tocó coincidir aquí. Qué dicha.",
-      "Ya vas por las 24 semanas y todavía me quedo pensando en que vamos a ser papás. Me da curiosidad pensar qué va a sacar tuyo y qué mío. Ojalá tu risa. Te veo con esa pancita y me sigues pareciendo preciosa, cada semana un poquito más. Nos va a tocar aprender un montón. Quiero hacer mi parte, y que sepas que puedes contar conmigo desde ahorita.",
+      "El año pasado tu cumpleaños nos agarró con apenas diecisiete días de novios. Ahora sé hasta cuánta sal le echas a las papas (demasiada). Llevamos un año compartiendo casi todo y durmiendo juntos casi todas las noches, y aun así me dan ganas de pasar más rato a la par tuya.",
+      "El otro día leí que el hierro de tu sangre y el calcio de tus huesos se formaron dentro de estrellas y en sus explosiones, hace miles de millones de años. Me quedé pensando en eso un buen rato. Algo de eso anduvo flotando por el espacio todo ese tiempo para terminar en tu risa. Y de todos los lugares y todos los siglos, nos tocó coincidir aquí. Qué dicha.",
+      "Ya vas por las 24 semanas y todavía me quedo pensando en que vamos a ser papás. Me da curiosidad pensar qué va a sacar tuyo y qué mío. Ojalá tu risa. Te veo con esa pancita y me sigues pareciendo preciosa, cada semana un poquito más. Nos va a tocar aprender un montón. Quiero aprender contigo y que puedas apoyarte en mí también en los días que cuesten.",
       "Hoy la Tierra terminó otra vuelta al sol desde que naciste. Son como 940 millones de kilómetros. Yo me subí a esta vuelta hace poquito, pero ya te aviso que pienso estar en todas las que vienen.",
       "Hoy pide lo que quieras, que no te voy a decir que no (bueno, casi nada). Y si después te da sueño, dormimos. Feliz cumpleaños, mi amor. Te amo."
     ],
@@ -150,12 +150,12 @@ window.CONTENIDO = {
   // Lo que dice cada estrella cuando ella la toca.
   susurros: [
     "Ven, te quiero cerquita.",
-    "Eres mi persona.",
+    "Me encantas, ¿sabías?",
     "Hay estrellas cuya luz tarda siglos en llegar. Yo llegué hace un año y aquí me quedo.",
-    "¿Después de todo este tiempo? Siempre.",
+    "Contigo, siempre.",
     "Todavía me pones nervioso.",
     "Duerme. Yo los cuido a los dos.",
-    "Te amo 3000.",
+    "Te amo más de lo que te digo.",
     "Te debo un chineo.",
     "Ya quiero conocer a nuestro bebé.",
     "Ven por tu beso.",
