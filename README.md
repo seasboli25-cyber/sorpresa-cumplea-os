@@ -16,7 +16,9 @@ Página de cumpleaños hecha por Josimar para Fiorella, para el 3 de noviembre d
 10. **Una carta** que se escribe sola, palabra por palabra.
 11. **Nuestro cielo**: estrellas que dicen cosas bonitas y que al final forman un corazón.
 
-Escondidos: tocar dos veces en cualquier parte suelta corazones, y escribir «teamo» en el teclado hace llover corazones.
+**Antes de su día** el sobre está cerrado con candado hasta las 00:00 del 3 de noviembre (hora de Costa Rica). Para verla antes, agrega `#vista` al final del link.
+
+Escondidos: mantener el dedo sobre la luna, escribir «lumos» o tocar «lumos» al final enciende una varita que busca un mensaje en la oscuridad. Tocar dos veces en cualquier parte suelta corazones, y escribir «teamo» en el teclado hace llover corazones.
 
 ## Cómo personalizarla
 
@@ -24,6 +26,7 @@ Todo el texto vive en **`contenido.js`**: nombres, razones, recuerdos, vales, la
 
 - `cumpleanos` va como `"MM-DD"`; `fechaNacimiento` (para mostrar su edad) y `fechaJuntos`, como `"AAAA-MM-DD"`.
 - `bebe.semanas` y `bebe.alDia` dicen cuántas semanas tenía en esa fecha; la página calcula el resto.
+- `whatsapp`: tu número con código de país (por ejemplo `"50688887777"`). Con él, los vales se canjean por WhatsApp.
 - `historia` son los momentos de la línea del tiempo: cámbialos o agrega los vuestros.
 - Las fotos van en la carpeta `fotos/` y se enlazan desde `recuerdos` con `foto: "fotos/nombre.jpg"`.
 

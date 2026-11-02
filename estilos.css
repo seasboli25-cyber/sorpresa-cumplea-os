@@ -1343,3 +1343,34 @@ html.js .papel .p { opacity: 0; filter: blur(4px); }
   cursor: pointer;
 }
 .lumos-nox:focus-visible { outline: 2px solid var(--vela); outline-offset: 3px; }
+
+/* La estrellita del bebé en el cierre */
+.final-bebe {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: clamp(1.45rem, 5.2vw, 1.9rem);
+  line-height: 1.2;
+  color: var(--rubor);
+  text-align: center;
+  animation: aparece-arriba 1.6s cubic-bezier(.2, .8, .2, 1);
+}
+.final-bebe::before {
+  content: "";
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--luz);
+  box-shadow: 0 0 10px 3px rgba(242, 153, 140, .7);
+  animation: latido-bebe .43s ease-in-out infinite;
+}
+@keyframes latido-bebe { 0%, 100% { transform: scale(1); } 25% { transform: scale(1.45); } }
+
+/* Codex, 2-nov: tras el canje queda un enlace real para enviar o reenviar el vale. */
+.vale-lado { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.vale-wa { font-size: .78rem; font-weight: 700; color: var(--vino); text-decoration: underline; text-underline-offset: 3px; }
+.vale-wa:focus-visible { outline: 2px solid var(--vino); outline-offset: 2px; border-radius: 4px; }
+/* Codex, 2-nov: sin esto el navegador se queda el gesto de la pulsación larga. */
+.luna { touch-action: none; }

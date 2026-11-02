@@ -21,7 +21,7 @@
 
   let abierto = false;
   let candadoActivo = false;
-  let alTocarCerrado = () => {};
+  let alTocarCerrado = () => false;
   const pendientes = [];
   const obs = 'IntersectionObserver' in window
     ? new IntersectionObserver((entradas) => {
@@ -573,7 +573,7 @@
   btnMusica.addEventListener('click', () => Musica.alternar());
 
   $('#sobre').addEventListener('click', function abrirSobre() {
-    if (candadoActivo) { alTocarCerrado(); return; }
+    if (candadoActivo && alTocarCerrado()) return;
     if (abierto) return;
     abierto = true;
     const pantalla = $('#pantalla-sobre');
@@ -620,15 +620,21 @@
       }
     }
 
-    function abrir() {
+    function abrir(puntero) {
       if (!capa.hidden) return;
       hallado = false;
       capa.classList.remove('hallado', 'cerrando');
       guia.textContent = 'Mueve la luz para encontrarlo';
       const W = window.innerWidth, H = window.innerHeight;
-      msj.style.left = Math.round(W * azar(0.3, 0.7)) + 'px';
-      msj.style.top = Math.round(H * azar(0.22, 0.5)) + 'px';
+      // El mensaje mide hasta 300 px: se mantiene entero dentro de la pantalla.
+      const medio = Math.min(300, W * 0.78) / 2 + 16;
+      msj.style.left = Math.round(Math.max(medio, Math.min(W - medio, W * azar(0.3, 0.7)))) + 'px';
+      msj.style.top = Math.round(Math.max(110, H * azar(0.22, 0.5))) + 'px';
       capa.hidden = false;
+      if (puntero != null) {
+        try { $('#luna').releasePointerCapture(puntero); } catch (e) { /* ya liberado */ }
+        try { capa.setPointerCapture(puntero); } catch (e) { /* el dedo ya se levantó */ }
+      }
       mover(W / 2, H * 0.82);
       // La luz se enciende como una varita: el radio se pasa de largo y luego se asienta.
       const fin = Math.min(W, H) * (reducido ? 0.32 : 0.24);
@@ -653,7 +659,7 @@
     capa.addEventListener('pointermove', (e) => mover(e.clientX, e.clientY));
     capa.addEventListener('pointerdown', (e) => mover(e.clientX, e.clientY));
     $('#lumos-nox').addEventListener('click', (e) => { e.stopPropagation(); cerrar(); });
-    $('#lumos-boton').addEventListener('click', abrir);
+    $('#lumos-boton').addEventListener('click', () => abrir());
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !capa.hidden) cerrar(); });
     return { abrir };
   })();
@@ -663,10 +669,11 @@
     const el = $('#luna');
     let toques = 0, tLargo = 0, porLargo = false;
     // Mantener el dedo sobre la luna enciende "lumos".
-    el.addEventListener('pointerdown', () => {
+    el.addEventListener('pointerdown', (e) => {
       porLargo = false;
       clearTimeout(tLargo);
-      tLargo = setTimeout(() => { porLargo = true; Lumos.abrir(); }, 900);
+      const id = e.pointerId;
+      tLargo = setTimeout(() => { porLargo = true; Lumos.abrir(id); }, 900);
     });
     ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => el.addEventListener(ev, () => clearTimeout(tLargo)));
     el.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -733,9 +740,12 @@
 
   /* ───────────── Candado: el sobre no se abre antes de su día ───────────── */
   (function candado() {
-    const m = /^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?$/.exec(String(C.abrirDesde || ''));
+    const m = /^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?(Z|[+-]\d{2}:\d{2})?$/.exec(String(C.abrirDesde || ''));
     if (!m) return;
-    const desde = new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0));
+    // Con zona ("-06:00") la apertura es la misma para todos; sin ella, es la hora del teléfono.
+    const desde = m[6]
+      ? new Date(`${m[1]}-${m[2]}-${m[3]}T${m[4] || '00'}:${m[5] || '00'}:00${m[6]}`)
+      : new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0));
     const vista = /(^|[?#&])vista($|[&#=])/.test(location.search + location.hash);
     if (isNaN(desde) || vista || Date.now() >= desde) return;
 
@@ -749,7 +759,7 @@
     pantalla.classList.add('con-candado');
     $('#candado').hidden = false;
     titulo.textContent = `No abrir antes del ${desde.toLocaleDateString('es', { day: 'numeric', month: 'long' })}`;
-    pista.innerHTML = 'Todavía no, mi amor.<br><small>Ya sé que no te gusta que te diga que no, pero esta vez vale la pena esperar.</small>';
+    pista.innerHTML = 'Todavía no, mi amor.<br><small>Lo preparé para ti. Quiero que lo abras cuando empiece tu día.</small>';
 
     const falta = () => {
       const s = Math.max(0, Math.ceil((desde - Date.now()) / 1000));
@@ -760,20 +770,24 @@
     const frases = [
       () => 'Todavía no, mi amor.',
       () => 'Paciencia… ya casi.',
-      () => 'Te dije que no. Y sí, ya sé que eso no te gusta.',
+      () => 'Ya sé que no te gusta que te diga que no… pero esta vez vale la pena.',
+      () => 'Sé que da curiosidad. Yo también tengo ganas de que lo veas.',
       () => `Faltan ${falta()}. Prometo que vale la pena.`
     ];
     let i = 0;
     sobre.addEventListener('animationend', (e) => { if (e.animationName === 'no-todavia') sobre.classList.remove('no-todavia'); });
     alTocarCerrado = () => {
+      // Al volver de la suspensión el intervalo puede no haber corrido todavía.
+      if (Date.now() >= desde) { liberar(); return false; }
       sobre.classList.remove('no-todavia');
       void sobre.offsetWidth;
       sobre.classList.add('no-todavia');
       avisar(frases[i++ % frases.length](), 3200);
+      return true;
     };
 
-    const tic = () => {
-      if (Date.now() < desde) { reloj.textContent = falta(); return; }
+    function liberar() {
+      if (!candadoActivo) return;
       clearInterval(id);
       candadoActivo = false;
       pantalla.classList.remove('con-candado');
@@ -783,8 +797,11 @@
       pista.innerHTML = pistaOriginal;
       const r = sobre.getBoundingClientRect();
       FX.corazones(r.left + r.width / 2, r.top + r.height / 2, 16);
-    };
+    }
+    const tic = () => { if (Date.now() < desde) reloj.textContent = falta(); else liberar(); };
     const id = setInterval(tic, 1000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) tic(); });
+    window.addEventListener('pageshow', tic);
     tic();
   })();
 
@@ -1208,7 +1225,7 @@
     let toques = 0;
     const canjeados = guardado.leer('sorpresa-vales') || {};
     const whatsapp = String(C.whatsapp || '').replace(/\D/g, '');
-    if (whatsapp) $('#vales-pista').textContent = `Toca «Canjear» y le llega tu mensaje a ${DE} por WhatsApp.`;
+    if (whatsapp) $('#vales-pista').textContent = 'Toca «Canjear» para abrir WhatsApp con el mensaje listo para enviar.';
 
     caja.addEventListener('click', () => {
       if (caja.classList.contains('abierta')) return;
@@ -1246,8 +1263,10 @@
         const el = document.createElement('div');
         el.className = 'vale';
         el.style.setProperty('--i', String(i));
-        el.innerHTML = `<div class="vale-txt"><span class="vale-etiqueta">Vale por</span><span class="vale-titulo">${esc(v.titulo)}</span><span class="vale-detalle">${esc(v.detalle)}</span></div><button class="vale-btn" type="button">Canjear</button><span class="vale-sello">Canjeado<small></small></span>`;
-        const marcar = (cuando) => { el.classList.add('canjeado'); $('small', el).textContent = cuando; };
+        el.innerHTML = `<div class="vale-txt"><span class="vale-etiqueta">Vale por</span><span class="vale-titulo">${esc(v.titulo)}</span><span class="vale-detalle">${esc(v.detalle)}</span></div><div class="vale-lado"><button class="vale-btn" type="button">Canjear</button><span class="vale-sello">Canjeado<small></small></span><a class="vale-wa" target="_blank" rel="noopener" hidden>Enviar por WhatsApp</a></div>`;
+        const enlace = $('.vale-wa', el);
+        if (whatsapp) enlace.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(`Amor, quiero canjear mi vale: «${v.titulo}». ¿Cuándo me lo cumples?`)}`;
+        const marcar = (cuando) => { el.classList.add('canjeado'); $('small', el).textContent = cuando; enlace.hidden = !whatsapp; };
         if (canjeados[v.titulo]) marcar(canjeados[v.titulo]);
         $('.vale-btn', el).addEventListener('click', (e) => {
           const cuando = new Date().toLocaleDateString('es', { day: 'numeric', month: 'short' });
@@ -1259,13 +1278,7 @@
           FX.corazones(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2, 10);
           if (whatsapp) {
             avisar(`¡Canjeado! Mándale el mensaje a ${DE} y te lo cumple.`);
-            const a = document.createElement('a');
-            a.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(`Amor, quiero canjear mi vale: «${v.titulo}». ¿Cuándo me lo cumples?`)}`;
-            a.target = '_blank';
-            a.rel = 'noopener';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
+            enlace.click();
           } else {
             avisar(`¡Canjeado! Enséñaselo a ${DE} para cobrarlo.`);
           }
@@ -1358,6 +1371,7 @@
     const susurros = Array.isArray(C.susurros) && C.susurros.length ? C.susurros : ['Te quiero.'];
     const N = 24;
     let W = 0, H = 0, estrellas = [], polvo = [], modo = 'libre', t0 = 0, iSusurro = 0, tBurbuja = 0, enPantalla = false, corriendo = false;
+    let nacimiento = 0;
 
     $('#final-titulo').textContent = (C.final && C.final.titulo) || `Te amo, ${PARA}`;
     $('#final-sub').textContent = (C.final && C.final.texto) || 'Feliz cumpleaños.';
@@ -1442,6 +1456,25 @@
         cx.stroke();
         cx.shadowBlur = 0;
       }
+      if (nacimiento) {
+        // La estrellita del bebé: nace despacio dentro del corazón y late a 140 por minuto.
+        const k = Math.min(1, (ts - nacimiento) / 1600);
+        const [, punta] = puntoCorazon(N / 2, latido);
+        const bx = W / 2, by = H / 2 + (punta - H / 2) * 0.68;
+        const pulso = reducido ? 0 : Math.pow(Math.max(0, Math.sin((ts / 1000) * Math.PI * (140 / 60))), 8);
+        const r = 2.4 * suave(k) * (1 + pulso * 0.35);
+        const g = cx.createRadialGradient(bx, by, 0, bx, by, r * 9);
+        g.addColorStop(0, `rgba(242,153,140,${0.6 * k})`);
+        g.addColorStop(1, 'rgba(242,153,140,0)');
+        cx.fillStyle = g;
+        cx.beginPath();
+        cx.arc(bx, by, r * 9, 0, Math.PI * 2);
+        cx.fill();
+        cx.fillStyle = `rgba(255,240,232,${k})`;
+        cx.beginPath();
+        cx.arc(bx, by, r, 0, Math.PI * 2);
+        cx.fill();
+      }
       for (const p of estrellas) {
         p.pulso *= 0.94;
         const brillo = 0.75 + Math.sin(t * 1.6 + p.fase) * 0.25;
@@ -1517,7 +1550,18 @@
         FX.confeti(r.left + r.width / 2, r.top + r.height / 2, 120, 1);
         Musica.fanfarria();
       }, reducido ? 100 : 3600);
-      setTimeout(() => { if (Musica.disponible()) btnOtra.hidden = false; }, reducido ? 200 : 5200);
+      if (C.bebe && C.final && C.final.bebe) {
+        setTimeout(() => {
+          nacimiento = performance.now();
+          arrancar();
+          Musica.latido(5, 140);
+          const linea = $('#final-bebe');
+          linea.textContent = C.final.bebe;
+          linea.hidden = false;
+          if (reducido) dibujar(nacimiento + 5000);
+        }, reducido ? 300 : 6800);
+      }
+      setTimeout(() => { if (Musica.disponible()) btnOtra.hidden = false; }, reducido ? 400 : 9000);
     });
     btnOtra.addEventListener('click', () => {
       Musica.otraVez();
@@ -1550,7 +1594,7 @@
     tecleado = (tecleado + e.key.toLowerCase()).slice(-8);
     if (tecleado.endsWith('lumos')) {
       tecleado = '';
-      Lumos.abrir();
+      Lumos.abrir(null);
     } else if (tecleado.endsWith('teamo')) {
       tecleado = '';
       FX.lluviaCorazones(70);

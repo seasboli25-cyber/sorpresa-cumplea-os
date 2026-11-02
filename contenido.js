@@ -45,9 +45,10 @@ window.CONTENIDO = {
     cierre: "Mientras tanto, yo me encargo de chinearlos a los dos."
   },
 
-  // El sobre no se abre antes de esta fecha y hora (la hora de su teléfono).
-  // null = sin candado. Para verla tú antes, agrega #vista al final del link.
-  abrirDesde: "2026-11-03T00:00",
+  // El sobre no se abre antes de esta fecha y hora. El "-06:00" fija la hora de
+  // Costa Rica, sin depender de la hora del teléfono. null = sin candado.
+  // Para verla tú antes, agrega #vista al final del link.
+  abrirDesde: "2026-11-03T00:00-06:00",
 
   // Tu número de WhatsApp con código de país y sin espacios ni "+" (por ejemplo
   // "50688887777"). Con él, al canjear un vale le abre WhatsApp con el mensaje listo.
@@ -167,7 +168,9 @@ window.CONTENIDO = {
 
   final: {
     titulo: "Te amo, Fiorella",
-    texto: "Feliz cumpleaños. Por este año y por todos los que vienen, los tres juntos."
+    texto: "Feliz cumpleaños. Por este año y por todos los que vienen, los tres juntos.",
+    // Aparece cuando nace la estrellita del bebé dentro del corazón.
+    bebe: "Y muy pronto, una estrella más."
   },
 
   // Aparece si toca la luna cinco veces.
