@@ -60,6 +60,10 @@ window.CONTENIDO = {
     hallado: "Lo encontraste."
   },
 
+  // true = al final de la página aparece un botón hacia la carta del universo.
+  // Déjalo en false si se la vas a dar impresa y quieres que sea sorpresa.
+  mostrarCartaUniverso: false,
+
   // Cuántas velas lleva el pastel (de 1 a 12).
   velas: 5,
 

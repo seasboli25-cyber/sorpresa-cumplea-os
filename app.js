@@ -636,8 +636,10 @@
       const W = window.innerWidth, H = window.innerHeight;
       msj.style.left = Math.round(W * azar(0.3, 0.7)) + 'px';
       msj.style.top = Math.round(Math.max(110, H * azar(0.22, 0.5))) + 'px';
+      focoPrevio = document.activeElement;
       capa.hidden = false;
       encajar();
+      setTimeout(() => $('#lumos-nox').focus({ preventScroll: true }), 50);
       if (puntero != null) {
         try { $('#luna').releasePointerCapture(puntero); } catch (e) { /* ya liberado */ }
         try { capa.setPointerCapture(puntero); } catch (e) { /* el dedo ya se levantó */ }
@@ -670,9 +672,14 @@
     }
     window.addEventListener('resize', encajar);
 
+    let focoPrevio = null;
     function cerrar() {
       capa.classList.add('cerrando');
-      setTimeout(() => { capa.hidden = true; capa.classList.remove('cerrando'); }, 700);
+      setTimeout(() => {
+        capa.hidden = true;
+        capa.classList.remove('cerrando');
+        if (focoPrevio && focoPrevio.focus) focoPrevio.focus();
+      }, 700);
     }
 
     capa.addEventListener('pointermove', (e) => mover(e.clientX, e.clientY));
@@ -733,9 +740,18 @@
     return nac ? [nac.getMonth(), nac.getDate()] : null;
   })();
   // Qué cumpleaños celebra la página: el de hoy, el que viene o el que acaba de pasar.
+  // El regalo es para el cumpleaños del año de "abrirDesde" (2026). Pasadas tres semanas la
+  // página queda como recuerdo de ese día, en vez de empezar a contar hacia el siguiente.
+  const anioRegalo = parseInt(String(C.abrirDesde || '').slice(0, 4), 10) || null;
   function cumpleActual(ahora = new Date()) {
     if (!diaCumple) return { modo: 'hoy', fecha: medianoche(ahora) };
     const hoy = medianoche(ahora);
+    if (anioRegalo) {
+      const regalo = new Date(anioRegalo, diaCumple[0], diaCumple[1]);
+      const desde = Math.round((hoy - regalo) / DIA);
+      if (desde > 21) return { modo: 'recuerdo', fecha: regalo, dias: desde };
+      if (desde > 0) return { modo: 'despues', fecha: regalo, dias: desde };
+    }
     const este = new Date(hoy.getFullYear(), diaCumple[0], diaCumple[1]);
     const dif = Math.round((hoy - este) / DIA);
     if (dif === 0) return { modo: 'hoy', fecha: este };
@@ -894,6 +910,14 @@
           Musica.fanfarria();
           avisar(`¡Ya es tu cumpleaños, ${PARA}!`, 6000);
         }
+      } else if (c.modo === 'recuerdo') {
+        $('#tiempo-ante').textContent = 'un recuerdo';
+        $('#tiempo-titulo').textContent = `Tu cumpleaños de ${c.fecha.getFullYear()}`;
+        intro.textContent = `Esta página la hice para el ${c.fecha.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' })}.`;
+        nota.textContent = 'Y todo lo que dice sigue siendo cierto.';
+        cont.hidden = true;
+        edad.hidden = true;
+        parar = null;
       } else {
         $('#tiempo-ante').textContent = 'un pequeño reloj';
         $('#tiempo-titulo').textContent = 'Todavía podemos celebrar';
@@ -1192,7 +1216,8 @@
     });
 
     const AC = window.AudioContext || window.webkitAudioContext;
-    if (AC && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.isSecureContext) btnMic.hidden = false;
+    // Micrófono apagado (2-nov): no se pudo probar en teléfonos reales y tocar las velas basta.
+    if (C.microfono && AC && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.isSecureContext) btnMic.hidden = false;
     btnMic.addEventListener('click', async () => {
       if (detenerMic) { detenerMic(); return; }
       let flujo;
@@ -1287,10 +1312,19 @@
         const el = document.createElement('div');
         el.className = 'vale';
         el.style.setProperty('--i', String(i));
-        el.innerHTML = `<div class="vale-txt"><span class="vale-etiqueta">Vale por</span><span class="vale-titulo">${esc(v.titulo)}</span><span class="vale-detalle">${esc(v.detalle)}</span></div><div class="vale-lado"><button class="vale-btn" type="button">Canjear</button><span class="vale-sello">Canjeado<small></small></span><a class="vale-wa" target="_blank" rel="noopener" hidden>Enviar por WhatsApp</a></div>`;
+        el.innerHTML = `<div class="vale-txt"><span class="vale-etiqueta">Vale por</span><span class="vale-titulo">${esc(v.titulo)}</span><span class="vale-detalle">${esc(v.detalle)}</span></div><div class="vale-lado"><button class="vale-btn" type="button">Canjear</button><span class="vale-sello">Canjeado<small></small></span><a class="vale-wa" target="_blank" rel="noopener" hidden>Enviar por WhatsApp</a><button class="vale-deshacer" type="button" hidden>Deshacer</button></div>`;
         const enlace = $('.vale-wa', el);
         if (whatsapp) enlace.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(`Amor, quiero canjear mi vale: «${v.titulo}». ¿Cuándo me lo cumples?`)}`;
-        const marcar = (cuando) => { el.classList.add('canjeado'); $('small', el).textContent = cuando; enlace.hidden = !whatsapp; };
+        const deshacer = $('.vale-deshacer', el);
+        const marcar = (cuando) => { el.classList.add('canjeado'); $('small', el).textContent = cuando; enlace.hidden = !whatsapp; deshacer.hidden = false; };
+        deshacer.addEventListener('click', () => {
+          delete canjeados[v.titulo];
+          guardado.escribir('sorpresa-vales', canjeados);
+          el.classList.remove('canjeado', 'recien');
+          enlace.hidden = true;
+          deshacer.hidden = true;
+          avisar('Listo, el vale vuelve a estar disponible.');
+        });
         if (canjeados[v.titulo]) marcar(canjeados[v.titulo]);
         $('.vale-btn', el).addEventListener('click', (e) => {
           const cuando = new Date().toLocaleDateString('es', { day: 'numeric', month: 'short' });
@@ -1327,7 +1361,9 @@
     $('#ecg-fondo').setAttribute('d', d);
     $('#ecg-luz').setAttribute('d', d);
 
-    const hoy = medianoche(new Date());
+    // Después del cumpleaños se quedan las semanas que tenía ese día, como recuerdo.
+    const ref = cumpleActual();
+    const hoy = ref.modo === 'despues' || ref.modo === 'recuerdo' ? ref.fecha : medianoche(new Date());
     const total = Math.max(0, Math.round(b.semanas * 7 + (hoy - base) / DIA));
     const semanas = Math.floor(total / 7);
     const dias = total % 7;
@@ -1336,9 +1372,11 @@
     $('#bebe-texto').textContent = b.texto || '';
     const faltan = Math.round((280 - total) / 7);
     const cierre = b.cierre ? ' ' + b.cierre : '';
-    $('#bebe-nota').textContent = faltan > 1
-      ? `Faltan unas ${faltan} semanas para conocer a nuestro bebé.${cierre}`
-      : `Ya casi conocemos a nuestro bebé.${cierre}`;
+    $('#bebe-nota').textContent = ref.modo === 'despues' || ref.modo === 'recuerdo'
+      ? `El día de tu cumpleaños faltaban unas ${faltan} semanas para conocer a nuestro bebé.`
+      : faltan > 1
+        ? `Faltan unas ${faltan} semanas para conocer a nuestro bebé.${cierre}`
+        : `Ya casi conocemos a nuestro bebé.${cierre}`;
 
     const btn = $('#latido');
     if (!Musica.disponible()) { btn.hidden = true; return; }
@@ -1397,6 +1435,8 @@
     let W = 0, H = 0, estrellas = [], polvo = [], modo = 'libre', t0 = 0, iSusurro = 0, tBurbuja = 0, enPantalla = false, corriendo = false;
     let nacimiento = 0;
 
+    const lista = $('#susurros-lista');
+    if (lista) lista.innerHTML = susurros.map((t) => `<li>${esc(t)}</li>`).join('');
     $('#final-titulo').textContent = (C.final && C.final.titulo) || `Te amo, ${PARA}`;
     $('#final-sub').textContent = (C.final && C.final.texto) || 'Feliz cumpleaños, mi amor.';
 
@@ -1586,6 +1626,7 @@
         }, reducido ? 300 : 6800);
       }
       setTimeout(() => { if (Musica.disponible()) btnOtra.hidden = false; }, reducido ? 400 : 9000);
+      if (C.mostrarCartaUniverso) setTimeout(() => { $('#ver-carta-universo').hidden = false; }, reducido ? 400 : 9600);
     });
     btnOtra.addEventListener('click', () => {
       Musica.otraVez();

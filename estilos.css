@@ -1578,3 +1578,23 @@ html.js .papel .p { opacity: 0; filter: blur(4px); }
 /* Codex, 2-nov: la estrellita del bebé en violeta con halo lila, y "lumos" algo más visible. */
 .final-bebe::before { background: var(--violeta); box-shadow: 0 0 0 3px rgba(185, 163, 234, .45), 0 0 14px 4px rgba(185, 163, 234, .7); }
 .lumos-boton { opacity: .7; }
+
+/* Atajo discreto a la carta, desde la portada. */
+.atajo-carta {
+  margin-top: 6px;
+  font-size: .82rem;
+  letter-spacing: .04em;
+  color: var(--tenue);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(228, 212, 255, .4);
+  opacity: 0;
+}
+.abierto .atajo-carta { animation: aparece-suave 1.2s ease 3.8s forwards; }
+.atajo-carta:hover, .atajo-carta:focus-visible { color: var(--luz); }
+.atajo-carta:focus-visible { outline: 2px solid var(--vela); outline-offset: 4px; border-radius: 4px; }
+#carta { scroll-margin-top: 24px; }
+
+/* Deshacer un vale canjeado por error. */
+.vale-deshacer { padding: 2px 6px; border: 0; background: none; color: var(--tinta-suave); font-size: .74rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.vale-deshacer:focus-visible { outline: 2px solid var(--violeta); outline-offset: 2px; border-radius: 4px; }
