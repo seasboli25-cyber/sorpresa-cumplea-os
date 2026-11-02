@@ -176,6 +176,9 @@
     }
 
     function tocar() {
+      // En iPhone con el interruptor de silencio, Web Audio se calla; 'playback' lo hace sonar
+      // como un video (Safari 17+). En otros navegadores no existe y no pasa nada.
+      try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* sin soporte */ }
       if (!iniciar()) return;
       if (ctx.state === 'suspended') ctx.resume();
       if (!cola.length) agregarCancion(ctx.currentTime + 0.25);
@@ -208,7 +211,9 @@
       campana(frec(n), ctx.currentTime + 0.01 + cuando, vol, dur);
     }
 
-    function latido(segundos = 6, lpm = 140) {
+    function latido(segundos = 6, lpm = 140, pedido = false) {
+      // El latido automático del final respeta la pausa; el del botón suena porque ella lo pidió.
+      if (!pedido && !sonando) return 0;
       if (!iniciar()) return;
       if (ctx.state === 'suspended') ctx.resume();
       const salida = ctx.createGain();
@@ -869,7 +874,9 @@
         $('#tiempo-titulo').textContent = 'Ya casi es tu día';
         intro.textContent = `Falta esto para el ${c.fecha.toLocaleDateString('es', { day: 'numeric', month: 'long' })}:`;
         nota.textContent = 'Yo ya tengo ganas de que llegue.';
-        parar = contador(cont, ['días', 'horas', 'minutos', 'segundos'], () => partir(Math.max(0, Math.floor((c.fecha - Date.now()) / 1000)), true), () => montar(true));
+        // Codex, 2-nov: con floor llegaba a cero en el último segundo del día 2 y se re-montaba
+        // sin fin; ceil llega a cero solo a medianoche y el re-montaje espera a la hora real.
+        parar = contador(cont, ['días', 'horas', 'minutos', 'segundos'], () => partir(Math.max(0, Math.ceil((c.fecha - Date.now()) / 1000)), true), () => setTimeout(() => montar(true), Math.max(30, c.fecha - Date.now() + 30)));
       } else if (c.modo === 'hoy') {
         const fin = new Date(c.fecha.getFullYear(), c.fecha.getMonth(), c.fecha.getDate() + 1);
         $('#tiempo-ante').textContent = 'tu cumpleaños';
@@ -1335,7 +1342,7 @@
     if (!Musica.disponible()) { btn.hidden = true; return; }
     let tLatido = 0;
     btn.addEventListener('click', () => {
-      const dura = Musica.latido(6, 140) || 6;
+      const dura = Musica.latido(6, 140, true) || 6;
       seccion.classList.add('latiendo');
       btn.disabled = true;
       const r = $('.monitor', seccion).getBoundingClientRect();
