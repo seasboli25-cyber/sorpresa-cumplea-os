@@ -45,6 +45,20 @@ window.CONTENIDO = {
     cierre: "Mientras tanto, yo me encargo de chinearlos a los dos."
   },
 
+  // El sobre no se abre antes de esta fecha y hora (la hora de su teléfono).
+  // null = sin candado. Para verla tú antes, agrega #vista al final del link.
+  abrirDesde: "2026-11-03T00:00",
+
+  // Tu número de WhatsApp con código de país y sin espacios ni "+" (por ejemplo
+  // "50688887777"). Con él, al canjear un vale le abre WhatsApp con el mensaje listo.
+  whatsapp: null,
+
+  // El secreto de "lumos": aparece en la oscuridad y se busca con la luz.
+  lumos: {
+    mensaje: "Juro solemnemente que mis intenciones contigo son todas buenas.",
+    hallado: "Travesura realizada."
+  },
+
   // Cuántas velas lleva el pastel (de 1 a 12).
   velas: 5,
 

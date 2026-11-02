@@ -31,7 +31,11 @@
     <span class="sello"><span data-inicial="de">J</span></span>
     <span class="matasellos" id="matasellos" aria-hidden="true" hidden><b id="matasellos-dia">3 NOV</b><small id="matasellos-anio">2026</small><i>con amor</i></span>
   </button>
-  <p class="sobre-pista mano">Tócalo cuando estés lista.<br><small>Mejor con el volumen un poquito arriba.</small></p>
+  <p class="sobre-pista mano" id="sobre-pista">Tócalo cuando estés lista.<br><small>Mejor con el volumen un poquito arriba.</small></p>
+  <div class="candado" id="candado" hidden>
+    <p class="candado-titulo" id="candado-titulo">No abrir antes del 3 de noviembre</p>
+    <p class="candado-reloj" id="candado-reloj">00:00:00</p>
+  </div>
 </div>
 
 <main id="historia">
@@ -189,6 +193,7 @@
 
   <footer class="pie">
     <p class="mano">Hecho con muchísimo amor por <span data-c="de">Josimar</span>, para <span data-c="para">Fiorella</span>.</p>
+    <button class="lumos-boton mano" id="lumos-boton" type="button">lumos</button>
   </footer>
 </main>
 
@@ -196,6 +201,13 @@
   <span class="barras" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
 </button>
 <div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+
+<div id="lumos" class="lumos" hidden>
+  <p class="lumos-mensaje" id="lumos-mensaje"></p>
+  <div class="lumos-sombra" aria-hidden="true"></div>
+  <p class="lumos-guia mano" id="lumos-guia">Mueve la luz para encontrarlo</p>
+  <button class="lumos-nox" id="lumos-nox" type="button">Nox</button>
+</div>
 
 <script src="contenido.js"></script>
 <script src="app.js"></script>

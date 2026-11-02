@@ -20,6 +20,8 @@
   };
 
   let abierto = false;
+  let candadoActivo = false;
+  let alTocarCerrado = () => {};
   const pendientes = [];
   const obs = 'IntersectionObserver' in window
     ? new IntersectionObserver((entradas) => {
@@ -571,6 +573,7 @@
   btnMusica.addEventListener('click', () => Musica.alternar());
 
   $('#sobre').addEventListener('click', function abrirSobre() {
+    if (candadoActivo) { alTocarCerrado(); return; }
     if (abierto) return;
     abierto = true;
     const pantalla = $('#pantalla-sobre');
@@ -591,11 +594,84 @@
     setTimeout(() => FX.fuegos(3), reducido ? 600 : 4600);
   });
 
+  /* ───────────── Lumos ───────────── */
+  const Lumos = (() => {
+    const capa = $('#lumos');
+    const msj = $('#lumos-mensaje');
+    const guia = $('#lumos-guia');
+    const datos = C.lumos || {};
+    let hallado = false, anim = 0;
+    msj.textContent = datos.mensaje || `Te amo, ${PARA}.`;
+
+    function mover(x, y) {
+      capa.style.setProperty('--x', x + 'px');
+      capa.style.setProperty('--y', y + 'px');
+      if (hallado) return;
+      const r = msj.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      if (Math.hypot(x - cx, y - cy) < Math.max(70, r.width * 0.35)) {
+        hallado = true;
+        setTimeout(() => {
+          capa.classList.add('hallado');
+          guia.textContent = datos.hallado || 'Travesura realizada.';
+          FX.corazones(cx, cy, 12);
+          Musica.fanfarria();
+        }, 900);
+      }
+    }
+
+    function abrir() {
+      if (!capa.hidden) return;
+      hallado = false;
+      capa.classList.remove('hallado', 'cerrando');
+      guia.textContent = 'Mueve la luz para encontrarlo';
+      const W = window.innerWidth, H = window.innerHeight;
+      msj.style.left = Math.round(W * azar(0.3, 0.7)) + 'px';
+      msj.style.top = Math.round(H * azar(0.22, 0.5)) + 'px';
+      capa.hidden = false;
+      mover(W / 2, H * 0.82);
+      // La luz se enciende como una varita: el radio se pasa de largo y luego se asienta.
+      const fin = Math.min(W, H) * (reducido ? 0.32 : 0.24);
+      const t0 = performance.now();
+      cancelAnimationFrame(anim);
+      const paso = (t) => {
+        const k = reducido ? 1 : Math.min(1, (t - t0) / 700);
+        const e = k < 0.6 ? (k / 0.6) * 1.5 : 1.5 - ((k - 0.6) / 0.4) * 0.5;
+        capa.style.setProperty('--r', (fin * e).toFixed(1) + 'px');
+        if (k < 1) anim = requestAnimationFrame(paso);
+      };
+      anim = requestAnimationFrame(paso);
+      Musica.tintineo();
+      setTimeout(Musica.tintineo, 140);
+    }
+
+    function cerrar() {
+      capa.classList.add('cerrando');
+      setTimeout(() => { capa.hidden = true; capa.classList.remove('cerrando'); }, 700);
+    }
+
+    capa.addEventListener('pointermove', (e) => mover(e.clientX, e.clientY));
+    capa.addEventListener('pointerdown', (e) => mover(e.clientX, e.clientY));
+    $('#lumos-nox').addEventListener('click', (e) => { e.stopPropagation(); cerrar(); });
+    $('#lumos-boton').addEventListener('click', abrir);
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !capa.hidden) cerrar(); });
+    return { abrir };
+  })();
+
   /* ───────────── La luna ───────────── */
   (function luna() {
     const el = $('#luna');
-    let toques = 0;
+    let toques = 0, tLargo = 0, porLargo = false;
+    // Mantener el dedo sobre la luna enciende "lumos".
+    el.addEventListener('pointerdown', () => {
+      porLargo = false;
+      clearTimeout(tLargo);
+      tLargo = setTimeout(() => { porLargo = true; Lumos.abrir(); }, 900);
+    });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => el.addEventListener(ev, () => clearTimeout(tLargo)));
+    el.addEventListener('contextmenu', (e) => e.preventDefault());
     el.addEventListener('click', () => {
+      if (porLargo) { porLargo = false; return; }
       toques++;
       el.classList.remove('toque');
       void el.offsetWidth;
@@ -605,6 +681,7 @@
       Musica.tintineo();
       if (toques === 5) {
         avisar(C.secretoLuna || 'Encontraste el secreto de la luna.', 6500);
+        setTimeout(() => avisar('Y si mantienes el dedo sobre la luna, pasa algo más…', 5000), 7200);
         FX.lluviaCorazones(60);
         Musica.fanfarria();
       }
@@ -652,6 +729,63 @@
     const pf = $('#portada-fecha');
     pf.textContent = c.toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' });
     pf.hidden = false;
+  })();
+
+  /* ───────────── Candado: el sobre no se abre antes de su día ───────────── */
+  (function candado() {
+    const m = /^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?$/.exec(String(C.abrirDesde || ''));
+    if (!m) return;
+    const desde = new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0));
+    const vista = /(^|[?#&])vista($|[&#=])/.test(location.search + location.hash);
+    if (isNaN(desde) || vista || Date.now() >= desde) return;
+
+    const pantalla = $('#pantalla-sobre');
+    const pista = $('#sobre-pista');
+    const sobre = $('#sobre');
+    const reloj = $('#candado-reloj');
+    const titulo = $('#candado-titulo');
+    const pistaOriginal = pista.innerHTML;
+    candadoActivo = true;
+    pantalla.classList.add('con-candado');
+    $('#candado').hidden = false;
+    titulo.textContent = `No abrir antes del ${desde.toLocaleDateString('es', { day: 'numeric', month: 'long' })}`;
+    pista.innerHTML = 'Todavía no, mi amor.<br><small>Ya sé que no te gusta que te diga que no, pero esta vez vale la pena esperar.</small>';
+
+    const falta = () => {
+      const s = Math.max(0, Math.ceil((desde - Date.now()) / 1000));
+      const hms = [Math.floor((s % 86400) / 3600), Math.floor((s % 3600) / 60), s % 60].map((x) => String(x).padStart(2, '0')).join(':');
+      const d = Math.floor(s / 86400);
+      return d ? `${plural(d, 'día', 'días')} y ${hms}` : hms;
+    };
+    const frases = [
+      () => 'Todavía no, mi amor.',
+      () => 'Paciencia… ya casi.',
+      () => 'Te dije que no. Y sí, ya sé que eso no te gusta.',
+      () => `Faltan ${falta()}. Prometo que vale la pena.`
+    ];
+    let i = 0;
+    sobre.addEventListener('animationend', (e) => { if (e.animationName === 'no-todavia') sobre.classList.remove('no-todavia'); });
+    alTocarCerrado = () => {
+      sobre.classList.remove('no-todavia');
+      void sobre.offsetWidth;
+      sobre.classList.add('no-todavia');
+      avisar(frases[i++ % frases.length](), 3200);
+    };
+
+    const tic = () => {
+      if (Date.now() < desde) { reloj.textContent = falta(); return; }
+      clearInterval(id);
+      candadoActivo = false;
+      pantalla.classList.remove('con-candado');
+      pantalla.classList.add('recien-abierto');
+      titulo.textContent = 'Ya es tu día';
+      reloj.textContent = 'Ahora sí';
+      pista.innerHTML = pistaOriginal;
+      const r = sobre.getBoundingClientRect();
+      FX.corazones(r.left + r.width / 2, r.top + r.height / 2, 16);
+    };
+    const id = setInterval(tic, 1000);
+    tic();
   })();
 
   // Contador reutilizable: pinta unidades y anima la cifra que cambia.
@@ -1073,6 +1207,8 @@
     const frases = ['Uy… parece que pesa', 'Algo se mueve ahí dentro…', '¡Una vez más!'];
     let toques = 0;
     const canjeados = guardado.leer('sorpresa-vales') || {};
+    const whatsapp = String(C.whatsapp || '').replace(/\D/g, '');
+    if (whatsapp) $('#vales-pista').textContent = `Toca «Canjear» y le llega tu mensaje a ${DE} por WhatsApp.`;
 
     caja.addEventListener('click', () => {
       if (caja.classList.contains('abierta')) return;
@@ -1121,7 +1257,18 @@
           marcar(cuando);
           Musica.fanfarria();
           FX.corazones(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2, 10);
-          avisar(`¡Canjeado! Enséñaselo a ${DE} para cobrarlo.`);
+          if (whatsapp) {
+            avisar(`¡Canjeado! Mándale el mensaje a ${DE} y te lo cumple.`);
+            const a = document.createElement('a');
+            a.href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(`Amor, quiero canjear mi vale: «${v.titulo}». ¿Cuándo me lo cumples?`)}`;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          } else {
+            avisar(`¡Canjeado! Enséñaselo a ${DE} para cobrarlo.`);
+          }
         });
         cont.appendChild(el);
       });
@@ -1401,7 +1548,10 @@
   window.addEventListener('keydown', (e) => {
     if (!abierto || e.key.length !== 1) return;
     tecleado = (tecleado + e.key.toLowerCase()).slice(-8);
-    if (tecleado.endsWith('teamo')) {
+    if (tecleado.endsWith('lumos')) {
+      tecleado = '';
+      Lumos.abrir();
+    } else if (tecleado.endsWith('teamo')) {
       tecleado = '';
       FX.lluviaCorazones(70);
       Musica.fanfarria();
