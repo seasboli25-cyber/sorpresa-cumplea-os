@@ -883,8 +883,10 @@
         $('#tiempo-titulo').textContent = 'Hoy te toca a ti';
         intro.textContent = `A este ${c.fecha.toLocaleDateString('es', { day: 'numeric', month: 'long' })} le quedan:`;
         nota.textContent = 'Aunque se acabe el día, el chineo sigue.';
-        parar = contador(cont, ['horas', 'minutos', 'segundos'], () => partir(Math.max(0, Math.floor((fin - Date.now()) / 1000)), false), () => {
+        // Codex, 2-nov: al acabar el día pasa al modo "después" en vez de quedarse en 00:00:00.
+        parar = contador(cont, ['horas', 'minutos', 'segundos'], () => partir(Math.max(0, Math.ceil((fin - Date.now()) / 1000)), false), () => {
           nota.textContent = 'Ya pasó medianoche. El chineo sigue.';
+          setTimeout(() => montar(false), Math.max(30, fin - Date.now() + 30));
         });
         if (celebrar) {
           FX.fuegos(6);
